@@ -43,3 +43,10 @@ set(CMAKE_CXX_FLAGS_GCOV
 )
 
 set(CMAKE_LINKER_FLAGS_GCOV "--coverage" CACHE STRING "Linker GCOV Flags" FORCE)
+
+set(CMAKE_CXX_FLAGS_MSAN
+    "-O3 -g -DNDEBUG -fsanitize=memory"
+    CACHE STRING
+    "C++ MSAN Flags"
+    FORCE
+)

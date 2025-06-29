@@ -28,8 +28,9 @@ target_sources(
 )
 
 if(OPTIONAL_ENABLE_TESTING)
-    find_package(GTest QUIET)
-    if(GTest_FOUND)
+    find_package(Catch2 3 QUIET)
+    if(Catch2_FOUND)
+        list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
         # Create the library target and named header set for testing beman_optional
         # and mark the set private
         add_executable(beman_optional_test)
@@ -42,11 +43,13 @@ if(OPTIONAL_ENABLE_TESTING)
         )
         # Tests
         add_subdirectory(tests/beman/optional)
+        include(Catch)
+        catch_discover_tests(beman_optional_test)
     else()
         message(
             WARNING
             "
-No provider for GTest. Unable to build tests.
+No provider for Catch2. Unable to build tests.
 Consider using CMAKE_PROJECT_TOP_LEVEL_INCLUDES=./cmake/use-fetch-content.cmake as documented in the README.md
 "
         )

@@ -12,10 +12,10 @@
 #include <tuple>
 #include <algorithm>
 #include <any>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 
-#include <gtest/gtest.h>
-
-TEST(OptionalTest, Constructors) {
+TEST_CASE("OptionalTest: Constructors", "[optional]") {
     beman::optional::optional<int> i1;
     beman::optional::optional<int> i2{beman::optional::nullopt};
     std::ignore = i1;
@@ -37,51 +37,51 @@ TEST(OptionalTest, Constructors) {
     std::ignore                         = e3;
 }
 
-TEST(OptionalTest, Constructors2) {
+TEST_CASE("OptionalTest: Constructors2", "[optional]") {
     beman::optional::optional<int> o1;
-    EXPECT_TRUE(!o1);
+    CHECK(!o1);
 
     beman::optional::optional<int> o2 = beman::optional::nullopt;
-    EXPECT_TRUE(!o2);
+    CHECK(!o2);
 
     beman::optional::optional<int> o3 = 42;
-    EXPECT_TRUE(*o3 == 42);
+    CHECK(*o3 == 42);
 
     beman::optional::optional<int> o4 = o3;
-    EXPECT_TRUE(*o4 == 42);
+    CHECK(*o4 == 42);
 
     beman::optional::optional<int> o5 = o1;
-    EXPECT_TRUE(!o5);
+    CHECK(!o5);
 
     beman::optional::optional<int> o6 = std::move(o3);
-    EXPECT_TRUE(*o6 == 42);
+    CHECK(*o6 == 42);
 
     beman::optional::optional<short> o7 = 42;
-    EXPECT_TRUE(*o7 == 42);
+    CHECK(*o7 == 42);
 
     beman::optional::optional<int> o8 = o7;
-    EXPECT_TRUE(*o8 == 42);
+    CHECK(*o8 == 42);
 
     beman::optional::optional<int> o9 = std::move(o7);
-    EXPECT_TRUE(*o9 == 42);
+    CHECK(*o9 == 42);
 
     {
         beman::optional::optional<int&> o;
-        EXPECT_TRUE(!o);
+        CHECK(!o);
 
         beman::optional::optional<int&> oo = o;
-        EXPECT_TRUE(!oo);
+        CHECK(!oo);
     }
 
     {
         auto                            i = 42;
         beman::optional::optional<int&> o = i;
-        EXPECT_TRUE(o);
-        EXPECT_TRUE(*o == 42);
+        CHECK(o);
+        CHECK(*o == 42);
 
         beman::optional::optional<int&> oo = o;
-        EXPECT_TRUE(oo);
-        EXPECT_TRUE(*oo == 42);
+        CHECK(oo);
+        CHECK(*oo == 42);
     }
 
     using beman::optional::tests::base;
@@ -89,13 +89,13 @@ TEST(OptionalTest, Constructors2) {
     std::vector<base> v;
     v.emplace_back();
     beman::optional::optional<std::vector<base>> ov = std::move(v);
-    EXPECT_TRUE(ov->size() == 1);
+    CHECK(ov->size() == 1);
 }
 
-TEST(OptionalTest, Constructors3) {
+TEST_CASE("OptionalTest: Constructors3", "[optional]") {
     beman::optional::optional<int> ie;
     beman::optional::optional<int> i4 = ie;
-    EXPECT_FALSE(i4);
+    CHECK(!i4);
 
     using beman::optional::tests::base;
     using beman::optional::tests::derived;
@@ -110,7 +110,7 @@ TEST(OptionalTest, Constructors3) {
     beman::optional::optional<base>    b4{d2};
 }
 
-TEST(OptionalTest, NonDefaultConstruct) {
+TEST_CASE("OptionalTest: NonDefaultConstruct", "[optional]") {
     using beman::optional::tests::int_ctor;
 
     int_ctor                            i = 7;
@@ -120,40 +120,40 @@ TEST(OptionalTest, NonDefaultConstruct) {
     std::ignore = v2;
 }
 
-TEST(OptionalTest, OptionalOfOptional) {
+TEST_CASE("OptionalTest: OptionalOfOptional", "[optional]") {
     using O = beman::optional::optional<int>;
     O                            o;
     beman::optional::optional<O> oo1 = o;
-    EXPECT_TRUE(oo1.has_value());
+    CHECK(oo1.has_value());
     oo1 = o;
-    EXPECT_TRUE(oo1.has_value());
-    EXPECT_FALSE(oo1->has_value());
+    CHECK(oo1.has_value());
+    CHECK(!oo1->has_value());
 
     beman::optional::optional<O> oo2 = std::move(o);
-    EXPECT_TRUE(oo2.has_value());
+    CHECK(oo2.has_value());
     oo2 = o;
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_FALSE(oo2->has_value());
+    CHECK(oo2.has_value());
+    CHECK(!oo2->has_value());
 
     // emplace constructs the inner optional
     oo2.emplace(beman::optional::nullopt);
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_FALSE(oo2->has_value());
+    CHECK(oo2.has_value());
+    CHECK(!oo2->has_value());
     oo2.emplace(beman::optional::in_place, 41);
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_TRUE(oo2.value() == 41);
+    CHECK(oo2.has_value());
+    CHECK(oo2.value() == 41);
     oo2.emplace(42);
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_TRUE(oo2.value() == 42);
+    CHECK(oo2.has_value());
+    CHECK(oo2.value() == 42);
     oo2.emplace(o);
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_FALSE(oo2->has_value());
+    CHECK(oo2.has_value());
+    CHECK(!oo2->has_value());
     oo2.emplace(O(43));
-    EXPECT_TRUE(oo2.has_value());
-    EXPECT_TRUE(oo2.value() == 43);
+    CHECK(oo2.has_value());
+    CHECK(oo2.value() == 43);
 }
 
-TEST(OptionalTest, EmplaceVariadic) {
+TEST_CASE("OptionalTest: EmplaceVariadic", "[optional]") {
     struct for_emplace {
         int a;
         int b;
@@ -162,15 +162,15 @@ TEST(OptionalTest, EmplaceVariadic) {
 
     beman::optional::optional<for_emplace> o3;
     o3.emplace(1, 2, 3);
-    EXPECT_TRUE(o3.has_value());
+    CHECK(o3.has_value());
 
     beman::optional::optional<for_emplace> engaged{f};
     engaged.emplace(1, 2, 3);
-    EXPECT_TRUE(engaged.has_value());
-    EXPECT_EQ(engaged->a, 1);
+    CHECK(engaged.has_value());
+    CHECK(1 == engaged->a);
 }
 
-TEST(OptionalTest, EmplaceInitializerList) {
+TEST_CASE("OptionalTest: EmplaceInitializerList", "[optional]") {
     struct for_emplace {
         std::vector<int> v; // something to construct with list
         std::string      name = "";
@@ -180,56 +180,56 @@ TEST(OptionalTest, EmplaceInitializerList) {
 
     beman::optional::optional<for_emplace> o3;
     o3.emplace({1, 2, 3});
-    EXPECT_TRUE(o3.has_value());
+    CHECK(o3.has_value());
 
     beman::optional::optional<for_emplace> engaged{f};
 
     auto e1 = engaged.emplace({1, 2, 3});
 
-    EXPECT_TRUE(engaged.has_value());
-    EXPECT_EQ(engaged->v[0], 1);
-    EXPECT_EQ(engaged->name, std::string(""));
-    EXPECT_EQ(engaged->v[0], e1.v[0]);
-    EXPECT_EQ(engaged->name, e1.name);
+    CHECK(engaged.has_value());
+    CHECK(1 == engaged->v[0]);
+    CHECK(std::string("") == engaged->name);
+    CHECK(e1.v[0] == engaged->v[0]);
+    CHECK(e1.name == engaged->name);
 
     auto e2 = engaged.emplace({2, 3, 4}, "Name");
-    EXPECT_TRUE(engaged.has_value());
-    EXPECT_EQ(engaged->v[0], 2);
-    EXPECT_EQ(engaged->name, std::string("Name"));
-    EXPECT_EQ(engaged->v[0], e2.v[0]);
-    EXPECT_EQ(engaged->name, e2.name);
+    CHECK(engaged.has_value());
+    CHECK(2 == engaged->v[0]);
+    CHECK(std::string("Name") == engaged->name);
+    CHECK(e2.v[0] == engaged->v[0]);
+    CHECK(e2.name == engaged->name);
 }
 
-TEST(OptionalTest, AssignmentValue) {
+TEST_CASE("OptionalTest: AssignmentValue", "[optional]") {
     beman::optional::optional<int> o1 = 42;
     beman::optional::optional<int> o2 = 12;
     beman::optional::optional<int> o3;
 
     o1 = static_cast<beman::optional::optional<int>&>(o1);
-    EXPECT_TRUE(*o1 == 42);
+    CHECK(*o1 == 42);
 
     o1 = o2;
-    EXPECT_TRUE(*o1 == 12);
+    CHECK(*o1 == 12);
 
     o1 = o3;
-    EXPECT_TRUE(!o1);
+    CHECK(!o1);
 
     o1 = 42;
-    EXPECT_TRUE(*o1 == 42);
+    CHECK(*o1 == 42);
 
     o1 = beman::optional::nullopt;
-    EXPECT_TRUE(!o1);
+    CHECK(!o1);
 
     o1 = std::move(o2);
-    EXPECT_TRUE(*o1 == 12);
+    CHECK(*o1 == 12);
 
     beman::optional::optional<short> o4 = 42;
 
     o1 = o4;
-    EXPECT_TRUE(*o1 == 42);
+    CHECK(*o1 == 42);
 
     o1 = std::move(o4);
-    EXPECT_TRUE(*o1 == 42);
+    CHECK(*o1 == 42);
 
     /*
       template <class U = T>
@@ -237,16 +237,16 @@ TEST(OptionalTest, AssignmentValue) {
     */
     short s = 54;
     o1      = s;
-    EXPECT_TRUE(*o1 == 54);
+    CHECK(*o1 == 54);
 
     beman::optional::optional<short> emptyShort;
     o1 = emptyShort;
-    EXPECT_FALSE(o1);
+    CHECK(!o1);
 
     o1 = o4;
-    EXPECT_TRUE(*o1 == 42);
+    CHECK(*o1 == 42);
     o1 = std::move(emptyShort);
-    EXPECT_FALSE(o1);
+    CHECK(!o1);
 
     struct not_trivial_copy_assignable {
         int i_;
@@ -268,49 +268,49 @@ TEST(OptionalTest, AssignmentValue) {
 
     // Copy into empty optional.
     o6 = o5;
-    EXPECT_TRUE(o6);
-    EXPECT_TRUE(o6->i_ == 5);
+    CHECK(o6);
+    CHECK(o6->i_ == 5);
 
     // Move into empty optional.
     o6.reset();
     o6 = std::move(o5);
-    EXPECT_TRUE(o6);
-    EXPECT_TRUE(o6->i_ == 5);
+    CHECK(o6);
+    CHECK(o6->i_ == 5);
 
     // Copy into engaged optional.
     beman::optional::optional<not_trivial_copy_assignable> o7{7};
     o6 = o7;
-    EXPECT_TRUE(o6);
-    EXPECT_TRUE(o6->i_ == 7);
+    CHECK(o6);
+    CHECK(o6->i_ == 7);
 
     // Move into engaged optional.
     beman::optional::optional<not_trivial_copy_assignable> o8{8};
     o6 = std::move(o8);
-    EXPECT_TRUE(o6);
-    EXPECT_TRUE(o6->i_ == 8);
+    CHECK(o6);
+    CHECK(o6->i_ == 8);
 
     // Copy from empty into engaged optional.
     o5.reset();
     o7 = o5;
-    EXPECT_FALSE(o7);
+    CHECK(!o7);
 
     // Move from empty into engaged optional.
     o8 = std::move(o5);
-    EXPECT_FALSE(o8);
+    CHECK(!o8);
 }
 
-TEST(OptionalTest, ConvertingAssignmentValue) {
+TEST_CASE("OptionalTest: ConvertingAssignmentValue", "[optional]") {
     beman::optional::optional<int> o1 = 42;
     beman::optional::optional<int> o2;
 
     short s = 9;
     o1      = s;
     o2      = s;
-    EXPECT_TRUE(o1);
-    EXPECT_TRUE(o2);
+    CHECK(o1);
+    CHECK(o2);
 }
 
-TEST(OptionalTest, ConvertingValueAssignment) {
+TEST_CASE("OptionalTest: ConvertingValueAssignment", "[optional]") {
     struct base {};
 
     struct convertible {
@@ -322,41 +322,41 @@ TEST(OptionalTest, ConvertingValueAssignment) {
 
     empty   = convertible{};
     engaged = convertible{};
-    EXPECT_TRUE(empty);
-    EXPECT_TRUE(engaged);
+    CHECK(empty);
+    CHECK(engaged);
 }
 
-TEST(OptionalTest, ValueObserver) {
+TEST_CASE("OptionalTest: ValueObserver", "[optional]") {
     beman::optional::optional<int> empty;
     beman::optional::optional<int> bound{5};
-    EXPECT_TRUE(bound);
-    EXPECT_FALSE(empty);
-    EXPECT_EQ(*bound, 5);
-    EXPECT_EQ(bound.value(), 5);
-    EXPECT_EQ(std::as_const(bound).value(), 5);
-    EXPECT_EQ(std::move(bound).value(), 5);
+    CHECK(bound);
+    CHECK(!empty);
+    CHECK(5 == *bound);
+    CHECK(5 == bound.value());
+    CHECK(5 == std::as_const(bound).value());
+    CHECK(5 == std::move(bound).value());
 
-    EXPECT_THROW(
-        {
+    CHECK_THROWS_AS(
+        [&]() {
             try {
                 empty.value();
             } catch (const beman::optional::bad_optional_access& e) {
-                EXPECT_STREQ("Optional has no value", e.what());
+                CHECK_THAT(e.what(), Catch::Matchers::Equals("Optional has no value"));
                 throw;
             }
-        },
+        }(),
         beman::optional::bad_optional_access);
 
-    EXPECT_THROW({ std::as_const(empty).value(); }, beman::optional::bad_optional_access);
-    EXPECT_THROW({ std::move(empty).value(); }, beman::optional::bad_optional_access);
+    CHECK_THROWS_AS([&]() { std::as_const(empty).value(); }(), beman::optional::bad_optional_access);
+    CHECK_THROWS_AS([&]() { std::move(empty).value(); }(), beman::optional::bad_optional_access);
 }
 
-TEST(OptionalTest, Triviality) {
-    EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_trivially_destructible<beman::optional::optional<int>>::value);
+TEST_CASE("OptionalTest: Triviality", "[optional]") {
+    CHECK(std::is_trivially_copy_constructible<beman::optional::optional<int>>::value);
+    CHECK(std::is_trivially_copy_assignable<beman::optional::optional<int>>::value);
+    CHECK(std::is_trivially_move_constructible<beman::optional::optional<int>>::value);
+    CHECK(std::is_trivially_move_assignable<beman::optional::optional<int>>::value);
+    CHECK(std::is_trivially_destructible<beman::optional::optional<int>>::value);
 
     {
         struct T {
@@ -366,11 +366,11 @@ TEST(OptionalTest, Triviality) {
             T& operator=(T&&)      = default;
             ~T()                   = default;
         };
-        EXPECT_TRUE(std::is_trivially_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_trivially_copy_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_trivially_move_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_trivially_move_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_trivially_destructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_trivially_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_trivially_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_trivially_move_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_trivially_move_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_trivially_destructible<beman::optional::optional<T>>::value);
     }
 
     {
@@ -381,20 +381,20 @@ TEST(OptionalTest, Triviality) {
             T& operator=(T&&) { return *this; };
             ~T() {}
         };
-        EXPECT_TRUE(!std::is_trivially_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_trivially_copy_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_trivially_move_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_trivially_move_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_trivially_destructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_trivially_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_trivially_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(!std::is_trivially_move_constructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_trivially_move_assignable<beman::optional::optional<T>>::value);
+        CHECK(!std::is_trivially_destructible<beman::optional::optional<T>>::value);
     }
 }
 
-TEST(OptionalTest, Deletion) {
-    EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<int>>::value);
-    EXPECT_TRUE(std::is_destructible<beman::optional::optional<int>>::value);
+TEST_CASE("OptionalTest: Deletion", "[optional]") {
+    CHECK(std::is_copy_constructible<beman::optional::optional<int>>::value);
+    CHECK(std::is_copy_assignable<beman::optional::optional<int>>::value);
+    CHECK(std::is_move_constructible<beman::optional::optional<int>>::value);
+    CHECK(std::is_move_assignable<beman::optional::optional<int>>::value);
+    CHECK(std::is_destructible<beman::optional::optional<int>>::value);
 
     {
         struct T {
@@ -404,11 +404,11 @@ TEST(OptionalTest, Deletion) {
             T& operator=(T&&)      = default;
             ~T()                   = default;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_destructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_move_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_move_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_destructible<beman::optional::optional<T>>::value);
     }
 
     {
@@ -418,10 +418,10 @@ TEST(OptionalTest, Deletion) {
             T& operator=(const T&) = delete;
             T& operator=(T&&)      = delete;
         };
-        EXPECT_TRUE(!std::is_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_copy_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_move_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_move_assignable<beman::optional::optional<T>>::value);
+        CHECK(!std::is_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(!std::is_move_constructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_move_assignable<beman::optional::optional<T>>::value);
     }
 
     {
@@ -431,10 +431,10 @@ TEST(OptionalTest, Deletion) {
             T& operator=(const T&) = delete;
             T& operator=(T&&)      = default;
         };
-        EXPECT_TRUE(!std::is_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(!std::is_copy_assignable<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_move_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_move_assignable<beman::optional::optional<T>>::value);
+        CHECK(!std::is_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(!std::is_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_move_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_move_assignable<beman::optional::optional<T>>::value);
     }
 
     {
@@ -444,8 +444,8 @@ TEST(OptionalTest, Deletion) {
             T& operator=(const T&) = default;
             T& operator=(T&&)      = delete;
         };
-        EXPECT_TRUE(std::is_copy_constructible<beman::optional::optional<T>>::value);
-        EXPECT_TRUE(std::is_copy_assignable<beman::optional::optional<T>>::value);
+        CHECK(std::is_copy_constructible<beman::optional::optional<T>>::value);
+        CHECK(std::is_copy_assignable<beman::optional::optional<T>>::value);
     }
 }
 
@@ -456,59 +456,59 @@ struct takes_init_and_variadic {
     takes_init_and_variadic(std::initializer_list<int> l, Args&&... args) : v(l), t(std::forward<Args>(args)...) {}
 };
 
-TEST(OptionalTest, InPlace) {
+TEST_CASE("OptionalTest: InPlace", "[optional]") {
     beman::optional::optional<int> o1{beman::optional::in_place};
     beman::optional::optional<int> o2(beman::optional::in_place);
-    EXPECT_TRUE(o1);
-    EXPECT_TRUE(o1 == 0);
-    EXPECT_TRUE(o2);
-    EXPECT_TRUE(o2 == 0);
+    CHECK(o1);
+    CHECK(o1 == 0);
+    CHECK(o2);
+    CHECK(o2 == 0);
 
     beman::optional::optional<int> o3(beman::optional::in_place, 42);
-    EXPECT_TRUE(o3 == 42);
+    CHECK(o3 == 42);
 
     beman::optional::optional<std::tuple<int, int>> o4(beman::optional::in_place, 0, 1);
-    EXPECT_TRUE(o4);
-    EXPECT_TRUE(std::get<0>(*o4) == 0);
-    EXPECT_TRUE(std::get<1>(*o4) == 1);
+    CHECK(o4);
+    CHECK(std::get<0>(*o4) == 0);
+    CHECK(std::get<1>(*o4) == 1);
 
     beman::optional::optional<std::vector<int>> o5(beman::optional::in_place, {0, 1});
-    EXPECT_TRUE(o5);
-    EXPECT_TRUE((*o5)[0] == 0);
-    EXPECT_TRUE((*o5)[1] == 1);
+    CHECK(o5);
+    CHECK((*o5)[0] == 0);
+    CHECK((*o5)[1] == 1);
 
     beman::optional::optional<takes_init_and_variadic> o6(beman::optional::in_place, {0, 1}, 2, 3);
-    EXPECT_TRUE(o6->v[0] == 0);
-    EXPECT_TRUE(o6->v[1] == 1);
-    EXPECT_TRUE(std::get<0>(o6->t) == 2);
-    EXPECT_TRUE(std::get<1>(o6->t) == 3);
+    CHECK(o6->v[0] == 0);
+    CHECK(o6->v[1] == 1);
+    CHECK(std::get<0>(o6->t) == 2);
+    CHECK(std::get<1>(o6->t) == 3);
 }
 
-TEST(OptionalTest, MakeOptional) {
+TEST_CASE("OptionalTest: MakeOptional", "[optional]") {
     auto o1 = beman::optional::make_optional(42);
     auto o2 = beman::optional::optional<int>(42);
 
     constexpr bool is_same = std::is_same<decltype(o1), beman::optional::optional<int>>::value;
-    EXPECT_TRUE(is_same);
-    EXPECT_TRUE(o1 == o2);
+    CHECK(is_same);
+    CHECK(o1 == o2);
 
     auto o3 = beman::optional::make_optional<std::tuple<int, int, int, int>>(0, 1, 2, 3);
-    EXPECT_TRUE(std::get<0>(*o3) == 0);
-    EXPECT_TRUE(std::get<1>(*o3) == 1);
-    EXPECT_TRUE(std::get<2>(*o3) == 2);
-    EXPECT_TRUE(std::get<3>(*o3) == 3);
+    CHECK(std::get<0>(*o3) == 0);
+    CHECK(std::get<1>(*o3) == 1);
+    CHECK(std::get<2>(*o3) == 2);
+    CHECK(std::get<3>(*o3) == 3);
 
     auto o4 = beman::optional::make_optional<std::vector<int>>({0, 1, 2, 3});
-    EXPECT_TRUE(o4.value()[0] == 0);
-    EXPECT_TRUE(o4.value()[1] == 1);
-    EXPECT_TRUE(o4.value()[2] == 2);
-    EXPECT_TRUE(o4.value()[3] == 3);
+    CHECK(o4.value()[0] == 0);
+    CHECK(o4.value()[1] == 1);
+    CHECK(o4.value()[2] == 2);
+    CHECK(o4.value()[3] == 3);
 
     auto o5 = beman::optional::make_optional<takes_init_and_variadic>({0, 1}, 2, 3);
-    EXPECT_TRUE(o5->v[0] == 0);
-    EXPECT_TRUE(o5->v[1] == 1);
-    EXPECT_TRUE(std::get<0>(o5->t) == 2);
-    EXPECT_TRUE(std::get<1>(o5->t) == 3);
+    CHECK(o5->v[0] == 0);
+    CHECK(o5->v[1] == 1);
+    CHECK(std::get<0>(o5->t) == 2);
+    CHECK(std::get<1>(o5->t) == 3);
 
     struct for_variadic {
         int a;
@@ -517,22 +517,22 @@ TEST(OptionalTest, MakeOptional) {
     };
 
     auto o6 = beman::optional::make_optional<for_variadic>(0, 1, 3);
-    EXPECT_TRUE(o6);
-    EXPECT_EQ(o6->a, 0);
+    CHECK(o6);
+    CHECK(0 == o6->a);
 }
 
-TEST(OptionalTest, Nullopt) {
+TEST_CASE("OptionalTest: Nullopt", "[optional]") {
     beman::optional::optional<int> o1 = beman::optional::nullopt;
     beman::optional::optional<int> o2{beman::optional::nullopt};
     beman::optional::optional<int> o3(beman::optional::nullopt);
     beman::optional::optional<int> o4 = {beman::optional::nullopt};
 
-    EXPECT_TRUE(!o1);
-    EXPECT_TRUE(!o2);
-    EXPECT_TRUE(!o3);
-    EXPECT_TRUE(!o4);
+    CHECK(!o1);
+    CHECK(!o2);
+    CHECK(!o3);
+    CHECK(!o4);
 
-    EXPECT_TRUE(!std::is_default_constructible<beman::optional::nullopt_t>::value);
+    CHECK(!std::is_default_constructible<beman::optional::nullopt_t>::value);
 }
 
 struct move_detector {
@@ -541,237 +541,237 @@ struct move_detector {
     bool been_moved = false;
 };
 
-TEST(OptionalTest, Observers) {
+TEST_CASE("OptionalTest: Observers", "[optional]") {
     beman::optional::optional<int>       o1 = 42;
     beman::optional::optional<int>       o2;
     const beman::optional::optional<int> o3 = 42;
 
-    EXPECT_TRUE(*o1 == 42);
-    EXPECT_TRUE(*o1 == o1.value());
-    EXPECT_TRUE(o2.value_or(42) == 42);
-    EXPECT_TRUE(o3.value() == 42);
+    CHECK(*o1 == 42);
+    CHECK(*o1 == o1.value());
+    CHECK(o2.value_or(42) == 42);
+    CHECK(o3.value() == 42);
     auto success = std::is_same<decltype(o1.value()), int&>::value;
-    EXPECT_TRUE(success);
+    CHECK(success);
     success = std::is_same<decltype(o3.value()), const int&>::value;
-    EXPECT_TRUE(success);
+    CHECK(success);
     success = std::is_same<decltype(std::move(o1).value()), int&&>::value;
-    EXPECT_TRUE(success);
+    CHECK(success);
 
     beman::optional::optional<move_detector> o4{beman::optional::in_place};
     move_detector                            o5 = std::move(o4).value();
-    EXPECT_TRUE(o4->been_moved);
-    EXPECT_TRUE(!o5.been_moved);
+    CHECK(o4->been_moved);
+    CHECK(!o5.been_moved);
 }
 
-TEST(OptionalTest, RelationalOps) {
+TEST_CASE("OptionalTest: RelationalOps", "[optional]") {
     beman::optional::optional<int> o1{4};
     beman::optional::optional<int> o2{42};
     beman::optional::optional<int> o3{};
 
     //  SECTION("self simple")
     {
-        EXPECT_TRUE(!(o1 == o2));
-        EXPECT_TRUE(o1 == o1);
-        EXPECT_TRUE(o1 != o2);
-        EXPECT_TRUE(!(o1 != o1));
-        EXPECT_TRUE(o1 < o2);
-        EXPECT_TRUE(!(o1 < o1));
-        EXPECT_TRUE(!(o1 > o2));
-        EXPECT_TRUE(!(o1 > o1));
-        EXPECT_TRUE(o1 <= o2);
-        EXPECT_TRUE(o1 <= o1);
-        EXPECT_TRUE(!(o1 >= o2));
-        EXPECT_TRUE(o1 >= o1);
+        CHECK(!(o1 == o2));
+        CHECK(o1 == o1);
+        CHECK(o1 != o2);
+        CHECK(!(o1 != o1));
+        CHECK(o1 < o2);
+        CHECK(!(o1 < o1));
+        CHECK(!(o1 > o2));
+        CHECK(!(o1 > o1));
+        CHECK(o1 <= o2);
+        CHECK(o1 <= o1);
+        CHECK(!(o1 >= o2));
+        CHECK(o1 >= o1);
     }
     //  SECTION("nullopt simple")
     {
-        EXPECT_TRUE(!(o1 == beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt == o1));
-        EXPECT_TRUE(o1 != beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt != o1);
-        EXPECT_TRUE(!(o1 < beman::optional::nullopt));
-        EXPECT_TRUE(beman::optional::nullopt < o1);
-        EXPECT_TRUE(o1 > beman::optional::nullopt);
-        EXPECT_TRUE(!(beman::optional::nullopt > o1));
-        EXPECT_TRUE(!(o1 <= beman::optional::nullopt));
-        EXPECT_TRUE(beman::optional::nullopt <= o1);
-        EXPECT_TRUE(o1 >= beman::optional::nullopt);
-        EXPECT_TRUE(!(beman::optional::nullopt >= o1));
+        CHECK(!(o1 == beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt == o1));
+        CHECK(o1 != beman::optional::nullopt);
+        CHECK(beman::optional::nullopt != o1);
+        CHECK(!(o1 < beman::optional::nullopt));
+        CHECK(beman::optional::nullopt < o1);
+        CHECK(o1 > beman::optional::nullopt);
+        CHECK(!(beman::optional::nullopt > o1));
+        CHECK(!(o1 <= beman::optional::nullopt));
+        CHECK(beman::optional::nullopt <= o1);
+        CHECK(o1 >= beman::optional::nullopt);
+        CHECK(!(beman::optional::nullopt >= o1));
 
-        EXPECT_TRUE(o3 == beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt == o3);
-        EXPECT_TRUE(!(o3 != beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt != o3));
-        EXPECT_TRUE(!(o3 < beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt < o3));
-        EXPECT_TRUE(!(o3 > beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt > o3));
-        EXPECT_TRUE(o3 <= beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt <= o3);
-        EXPECT_TRUE(o3 >= beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt >= o3);
+        CHECK(o3 == beman::optional::nullopt);
+        CHECK(beman::optional::nullopt == o3);
+        CHECK(!(o3 != beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt != o3));
+        CHECK(!(o3 < beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt < o3));
+        CHECK(!(o3 > beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt > o3));
+        CHECK(o3 <= beman::optional::nullopt);
+        CHECK(beman::optional::nullopt <= o3);
+        CHECK(o3 >= beman::optional::nullopt);
+        CHECK(beman::optional::nullopt >= o3);
     }
     //  SECTION("with T simple")
     {
-        EXPECT_TRUE(!(o1 == 1));
-        EXPECT_TRUE(!(1 == o1));
-        EXPECT_TRUE(o1 != 1);
-        EXPECT_TRUE(1 != o1);
-        EXPECT_TRUE(!(o1 < 1));
-        EXPECT_TRUE(1 < o1);
-        EXPECT_TRUE(o1 > 1);
-        EXPECT_TRUE(!(1 > o1));
-        EXPECT_TRUE(!(o1 <= 1));
-        EXPECT_TRUE(1 <= o1);
-        EXPECT_TRUE(o1 >= 1);
-        EXPECT_TRUE(!(1 >= o1));
+        CHECK(!(o1 == 1));
+        CHECK(!(1 == o1));
+        CHECK(o1 != 1);
+        CHECK(1 != o1);
+        CHECK(!(o1 < 1));
+        CHECK(1 < o1);
+        CHECK(o1 > 1);
+        CHECK(!(1 > o1));
+        CHECK(!(o1 <= 1));
+        CHECK(1 <= o1);
+        CHECK(o1 >= 1);
+        CHECK(!(1 >= o1));
 
-        EXPECT_TRUE(o1 == 4);
-        EXPECT_TRUE(4 == o1);
-        EXPECT_TRUE(!(o1 != 4));
-        EXPECT_TRUE(!(4 != o1));
-        EXPECT_TRUE(!(o1 < 4));
-        EXPECT_TRUE(!(4 < o1));
-        EXPECT_TRUE(!(o1 > 4));
-        EXPECT_TRUE(!(4 > o1));
-        EXPECT_TRUE(o1 <= 4);
-        EXPECT_TRUE(4 <= o1);
-        EXPECT_TRUE(o1 >= 4);
-        EXPECT_TRUE(4 >= o1);
+        CHECK(o1 == 4);
+        CHECK(4 == o1);
+        CHECK(!(o1 != 4));
+        CHECK(!(4 != o1));
+        CHECK(!(o1 < 4));
+        CHECK(!(4 < o1));
+        CHECK(!(o1 > 4));
+        CHECK(!(4 > o1));
+        CHECK(o1 <= 4);
+        CHECK(4 <= o1);
+        CHECK(o1 >= 4);
+        CHECK(4 >= o1);
     }
     beman::optional::optional<std::string> o4{"hello"};
     beman::optional::optional<std::string> o5{"xyz"};
 
     //  SECTION("self complex")
     {
-        EXPECT_TRUE(!(o4 == o5));
-        EXPECT_TRUE(o4 == o4);
-        EXPECT_TRUE(o4 != o5);
-        EXPECT_TRUE(!(o4 != o4));
-        EXPECT_TRUE(o4 < o5);
-        EXPECT_TRUE(!(o4 < o4));
-        EXPECT_TRUE(!(o4 > o5));
-        EXPECT_TRUE(!(o4 > o4));
-        EXPECT_TRUE(o4 <= o5);
-        EXPECT_TRUE(o4 <= o4);
-        EXPECT_TRUE(!(o4 >= o5));
-        EXPECT_TRUE(o4 >= o4);
+        CHECK(!(o4 == o5));
+        CHECK(o4 == o4);
+        CHECK(o4 != o5);
+        CHECK(!(o4 != o4));
+        CHECK(o4 < o5);
+        CHECK(!(o4 < o4));
+        CHECK(!(o4 > o5));
+        CHECK(!(o4 > o4));
+        CHECK(o4 <= o5);
+        CHECK(o4 <= o4);
+        CHECK(!(o4 >= o5));
+        CHECK(o4 >= o4);
     }
     //  SECTION("nullopt complex")
     {
-        EXPECT_TRUE(!(o4 == beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt == o4));
-        EXPECT_TRUE(o4 != beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt != o4);
-        EXPECT_TRUE(!(o4 < beman::optional::nullopt));
-        EXPECT_TRUE(beman::optional::nullopt < o4);
-        EXPECT_TRUE(o4 > beman::optional::nullopt);
-        EXPECT_TRUE(!(beman::optional::nullopt > o4));
-        EXPECT_TRUE(!(o4 <= beman::optional::nullopt));
-        EXPECT_TRUE(beman::optional::nullopt <= o4);
-        EXPECT_TRUE(o4 >= beman::optional::nullopt);
-        EXPECT_TRUE(!(beman::optional::nullopt >= o4));
+        CHECK(!(o4 == beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt == o4));
+        CHECK(o4 != beman::optional::nullopt);
+        CHECK(beman::optional::nullopt != o4);
+        CHECK(!(o4 < beman::optional::nullopt));
+        CHECK(beman::optional::nullopt < o4);
+        CHECK(o4 > beman::optional::nullopt);
+        CHECK(!(beman::optional::nullopt > o4));
+        CHECK(!(o4 <= beman::optional::nullopt));
+        CHECK(beman::optional::nullopt <= o4);
+        CHECK(o4 >= beman::optional::nullopt);
+        CHECK(!(beman::optional::nullopt >= o4));
 
-        EXPECT_TRUE(o3 == beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt == o3);
-        EXPECT_TRUE(!(o3 != beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt != o3));
-        EXPECT_TRUE(!(o3 < beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt < o3));
-        EXPECT_TRUE(!(o3 > beman::optional::nullopt));
-        EXPECT_TRUE(!(beman::optional::nullopt > o3));
-        EXPECT_TRUE(o3 <= beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt <= o3);
-        EXPECT_TRUE(o3 >= beman::optional::nullopt);
-        EXPECT_TRUE(beman::optional::nullopt >= o3);
+        CHECK(o3 == beman::optional::nullopt);
+        CHECK(beman::optional::nullopt == o3);
+        CHECK(!(o3 != beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt != o3));
+        CHECK(!(o3 < beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt < o3));
+        CHECK(!(o3 > beman::optional::nullopt));
+        CHECK(!(beman::optional::nullopt > o3));
+        CHECK(o3 <= beman::optional::nullopt);
+        CHECK(beman::optional::nullopt <= o3);
+        CHECK(o3 >= beman::optional::nullopt);
+        CHECK(beman::optional::nullopt >= o3);
     }
 
     //  SECTION("with T complex")
     {
-        EXPECT_TRUE(!(o4 == "a"));
-        EXPECT_TRUE(!("a" == o4));
-        EXPECT_TRUE(o4 != "a");
-        EXPECT_TRUE("a" != o4);
-        EXPECT_TRUE(!(o4 < "a"));
-        EXPECT_TRUE("a" < o4);
-        EXPECT_TRUE(o4 > "a");
-        EXPECT_TRUE(!("a" > o4));
-        EXPECT_TRUE(!(o4 <= "a"));
-        EXPECT_TRUE("a" <= o4);
-        EXPECT_TRUE(o4 >= "a");
-        EXPECT_TRUE(!("a" >= o4));
+        CHECK(!(o4 == "a"));
+        CHECK(!("a" == o4));
+        CHECK(o4 != "a");
+        CHECK("a" != o4);
+        CHECK(!(o4 < "a"));
+        CHECK("a" < o4);
+        CHECK(o4 > "a");
+        CHECK(!("a" > o4));
+        CHECK(!(o4 <= "a"));
+        CHECK("a" <= o4);
+        CHECK(o4 >= "a");
+        CHECK(!("a" >= o4));
 
-        EXPECT_TRUE(o4 == "hello");
-        EXPECT_TRUE("hello" == o4);
-        EXPECT_TRUE(!(o4 != "hello"));
-        EXPECT_TRUE(!("hello" != o4));
-        EXPECT_TRUE(!(o4 < "hello"));
-        EXPECT_TRUE(!("hello" < o4));
-        EXPECT_TRUE(!(o4 > "hello"));
-        EXPECT_TRUE(!("hello" > o4));
-        EXPECT_TRUE(o4 <= "hello");
-        EXPECT_TRUE("hello" <= o4);
-        EXPECT_TRUE(o4 >= "hello");
-        EXPECT_TRUE("hello" >= o4);
+        CHECK(o4 == "hello");
+        CHECK("hello" == o4);
+        CHECK(!(o4 != "hello"));
+        CHECK(!("hello" != o4));
+        CHECK(!(o4 < "hello"));
+        CHECK(!("hello" < o4));
+        CHECK(!(o4 > "hello"));
+        CHECK(!("hello" > o4));
+        CHECK(o4 <= "hello");
+        CHECK("hello" <= o4);
+        CHECK(o4 >= "hello");
+        CHECK("hello" >= o4);
     }
 }
 
-TEST(OptionalTest, SwapValue) {
+TEST_CASE("OptionalTest: SwapValue", "[optional]") {
     beman::optional::optional<int> o1 = 42;
     beman::optional::optional<int> o2 = 12;
     o1.swap(o2);
-    EXPECT_EQ(o1.value(), 12);
-    EXPECT_EQ(o2.value(), 42);
+    CHECK(12 == o1.value());
+    CHECK(42 == o2.value());
 }
 
-TEST(OptionalTest, SwapWNull) {
+TEST_CASE("OptionalTest: SwapWNull", "[optional]") {
     beman::optional::optional<int> o1 = 42;
     beman::optional::optional<int> o2 = beman::optional::nullopt;
     o1.swap(o2);
-    EXPECT_TRUE(!o1.has_value());
-    EXPECT_EQ(o2.value(), 42);
+    CHECK(!o1.has_value());
+    CHECK(42 == o2.value());
 }
 
-TEST(OptionalTest, SwapNullIntializedWithValue) {
+TEST_CASE("OptionalTest: SwapNullIntializedWithValue", "[optional]") {
     beman::optional::optional<int> o1 = beman::optional::nullopt;
     beman::optional::optional<int> o2 = 42;
     o1.swap(o2);
-    EXPECT_EQ(o1.value(), 42);
-    EXPECT_TRUE(!o2.has_value());
+    CHECK(42 == o1.value());
+    CHECK(!o2.has_value());
 }
 
-TEST(OptionalTest, Emplace) {
+TEST_CASE("OptionalTest: Emplace", "[optional]") {
     beman::optional::optional<std::pair<std::pair<int, int>, std::pair<double, double>>> i;
     i.emplace(std::piecewise_construct, std::make_tuple(0, 2), std::make_tuple(3, 4));
-    EXPECT_TRUE(i->first.first == 0);
-    EXPECT_TRUE(i->first.second == 2);
-    EXPECT_TRUE(i->second.first == 3);
-    EXPECT_TRUE(i->second.second == 4);
+    CHECK(i->first.first == 0);
+    CHECK(i->first.second == 2);
+    CHECK(i->second.first == 3);
+    CHECK(i->second.second == 4);
 }
 
 struct A {
     A() { throw std::exception(); }
 };
 
-TEST(OptionalTest, EmplaceWithExceptionThrown) {
+TEST_CASE("OptionalTest: EmplaceWithExceptionThrown", "[optional]") {
     beman::optional::optional<A> a;
-    EXPECT_ANY_THROW(a.emplace());
+    CHECK_THROWS(a.emplace());
 }
 
-TEST(OptionalTest, RangeTest) {
+TEST_CASE("OptionalTest: RangeTest", "[optional]") {
     beman::optional::optional<int> o1 = beman::optional::nullopt;
     beman::optional::optional<int> o2 = 42;
-    EXPECT_EQ(*o2, 42);
+    CHECK(42 == *o2);
     for (auto k : o1) {
         std::ignore = k;
-        EXPECT_TRUE(false);
+        CHECK(false);
     }
     for (auto k : o2) {
-        EXPECT_EQ(k, 42);
+        CHECK(42 == k);
     }
 }
 
-TEST(OptionalTest, RangeConstructors) {
+TEST_CASE("OptionalTest: RangeConstructors", "[optional]") {
     std::ranges::single_view<std::optional<int>> s;
     std::ranges::single_view<std::optional<int>> s2{s};
     std::ranges::single_view<std::optional<int>> s3{std::optional<int>{}};
@@ -785,7 +785,7 @@ TEST(OptionalTest, RangeConstructors) {
     std::ignore = n3;
 }
 
-TEST(OptionalTest, ConceptCheckRef) {
+TEST_CASE("OptionalTest: ConceptCheckRef", "[optional]") {
     static_assert(std::ranges::range<beman::optional::optional<int&>>);
     static_assert(std::ranges::view<beman::optional::optional<int&>>);
     static_assert(std::ranges::input_range<beman::optional::optional<int&>>);
@@ -821,32 +821,32 @@ TEST(OptionalTest, ConceptCheckRef) {
     static_assert(std::ranges::random_access_range<beman::optional::optional<ref>>);
 }
 
-TEST(OptionalTest, BreathingTest) {
+TEST_CASE("OptionalTest: BreathingTest", "[optional]") {
     beman::optional::optional<int> m;
     beman::optional::optional<int> m1{1};
 
     m = m1;
-    ASSERT_EQ(*std::begin(m), 1);
+    REQUIRE(1 == *std::begin(m));
 
     m = {};
-    ASSERT_FALSE(m);
+    REQUIRE(!m);
 
     beman::optional::optional<double> d0{0};
 
     beman::optional::optional<double> d1{1};
 
     d0 = d1;
-    ASSERT_EQ(*std::begin(d0), 1.0);
+    REQUIRE(1.0 == *std::begin(d0));
 }
 
-TEST(OptionalTest, BreathingTestRef) {
+TEST_CASE("OptionalTest: BreathingTestRef", "[optional]") {
     beman::optional::optional<int&> m;
 
     int                             one = 1;
     beman::optional::optional<int&> m1{one};
 
     m = m1;
-    ASSERT_EQ(*std::begin(m), 1);
+    REQUIRE(1 == *std::begin(m));
 
     double                             zero = 0.0;
     beman::optional::optional<double&> d0{zero};
@@ -855,30 +855,30 @@ TEST(OptionalTest, BreathingTestRef) {
     beman::optional::optional<double&> d1{one_d};
 
     d0 = d1;
-    ASSERT_EQ(*std::begin(d0), 1.0);
+    REQUIRE(1.0 == *std::begin(d0));
 }
 
-TEST(OptionalTest, CompTest) {
+TEST_CASE("OptionalTest: CompTest", "[optional]") {
     beman::optional::optional<int> m;
     beman::optional::optional<int> m0{0};
     beman::optional::optional<int> m1{1};
     beman::optional::optional<int> m1a{1};
 
-    ASSERT_EQ(m, m);
-    ASSERT_EQ(m0, m0);
-    ASSERT_EQ(m1, m1);
-    ASSERT_EQ(m1a, m1a);
-    ASSERT_EQ(m1, m1a);
+    REQUIRE(m == m);
+    REQUIRE(m0 == m0);
+    REQUIRE(m1 == m1);
+    REQUIRE(m1a == m1a);
+    REQUIRE(m1a == m1);
 
-    ASSERT_NE(m, m0);
-    ASSERT_NE(m0, m1);
+    REQUIRE(m0 != m);
+    REQUIRE(m1 != m0);
 
-    ASSERT_TRUE(m < m0);
-    ASSERT_TRUE(m0 < m1);
-    ASSERT_TRUE(m1 <= m1a);
+    REQUIRE(m < m0);
+    REQUIRE(m0 < m1);
+    REQUIRE(m1 <= m1a);
 }
 
-TEST(OptionalTest, CompTestRef) {
+TEST_CASE("OptionalTest: CompTestRef", "[optional]") {
     beman::optional::optional<int&> m;
     int                             zero  = 0;
     int                             one   = 1;
@@ -887,19 +887,19 @@ TEST(OptionalTest, CompTestRef) {
     beman::optional::optional<int&> m1{one};
     beman::optional::optional<int&> m1a{one_a};
 
-    ASSERT_EQ(m, m);
-    ASSERT_EQ(m0, m0);
-    ASSERT_EQ(m1, m1);
-    ASSERT_EQ(m1a, m1a);
-    ASSERT_EQ(m1, m1a);
+    REQUIRE(m == m);
+    REQUIRE(m0 == m0);
+    REQUIRE(m1 == m1);
+    REQUIRE(m1a == m1a);
+    REQUIRE(m1a == m1);
 
-    ASSERT_NE(m, m0);
-    ASSERT_NE(m0, m1);
+    REQUIRE(m0 != m);
+    REQUIRE(m1 != m0);
 
-    ASSERT_TRUE(m < m0);
-    ASSERT_TRUE(m0 > m);
-    ASSERT_TRUE(m0 < m1);
-    ASSERT_TRUE(m1a <= m1);
+    REQUIRE(m < m0);
+    REQUIRE(m0 > m);
+    REQUIRE(m0 < m1);
+    REQUIRE(m1a <= m1);
 }
 
 // "and_then" creates a new view by applying a
@@ -918,7 +918,7 @@ inline constexpr auto yield_if = []<class T>(bool b, T x) {
     return b ? beman::optional::optional<T>{std::move(x)} : beman::optional::nullopt;
 };
 
-TEST(OptionalTest, PythTripleTest) {
+TEST_CASE("OptionalTest: PythTripleTest", "[optional]") {
     using std::views::iota;
     auto triples = and_then(iota(1), [](int z) {
         return and_then(iota(1, z + 1), [=](int x) {
@@ -927,33 +927,33 @@ TEST(OptionalTest, PythTripleTest) {
         });
     });
 
-    ASSERT_EQ(*std::ranges::begin(triples), std::make_tuple(3, 4, 5));
+    REQUIRE(std::make_tuple(3, 4, 5) == *std::ranges::begin(triples));
 }
 
 using namespace beman;
 
-TEST(OptionalTest, ValueBase) {
+TEST_CASE("OptionalTest: ValueBase", "[optional]") {
     int                            i = 7;
     beman::optional::optional<int> v1{};
 
     beman::optional::optional<int> v2{i};
     for (auto i : v1)
-        ASSERT_TRUE(i != i); // tautology so i is used and not warned
+        REQUIRE(i != i);
 
     for (auto i : v2)
-        ASSERT_EQ(i, 7);
+        REQUIRE(7 == i);
 }
 
-TEST(OptionalTest, RefWrapper) {
+TEST_CASE("OptionalTest: RefWrapper", "[optional]") {
     int i = 7;
 
     beman::optional::optional<int> v2{std::ref(i)};
 
     for (auto i : v2)
-        ASSERT_EQ(i, 7);
+        REQUIRE(7 == i);
 }
 
-TEST(OptionalTest, ValueNonDefaultConstruct) {
+TEST_CASE("OptionalTest: ValueNonDefaultConstruct", "[optional]") {
     using beman::optional::tests::int_ctor;
     int_ctor                            i = 7;
     beman::optional::optional<int_ctor> v1{};
@@ -962,41 +962,41 @@ TEST(OptionalTest, ValueNonDefaultConstruct) {
     std::ignore = v2;
 }
 
-TEST(OptionalTest, RefBase) {
+TEST_CASE("OptionalTest: RefBase", "[optional]") {
     int                             i = 7;
     beman::optional::optional<int&> v1{};
-    // ASSERT_TRUE(v1.size() == 0);
+    // REQUIRE (v1.size() == 0);
 
     beman::optional::optional<int&> v2{i};
-    // ASSERT_TRUE(v2.size() == 1);
+    // REQUIRE (v2.size() == 1);
     for (auto i : v1)
-        ASSERT_TRUE(i != i); // tautology so i is used and not warned
+        REQUIRE(i != i);
 
     for (auto i : v2) {
-        ASSERT_EQ(i, 7);
+        REQUIRE(7 == i);
         i = 9;
-        ASSERT_EQ(i, 9);
+        REQUIRE(9 == i);
     }
-    ASSERT_EQ(i, 7);
+    REQUIRE(7 == i);
 
     for (auto&& i : v2) {
-        ASSERT_EQ(i, 7);
+        REQUIRE(7 == i);
         i = 9;
-        ASSERT_EQ(i, 9);
+        REQUIRE(9 == i);
     }
-    ASSERT_EQ(i, 9);
+    REQUIRE(9 == i);
 
     int s = 4;
 
     for (auto&& i : beman::optional::optional<int&>(s)) {
-        ASSERT_EQ(i, 4);
+        REQUIRE(4 == i);
         i = 9;
-        ASSERT_EQ(i, 9);
+        REQUIRE(9 == i);
     }
-    ASSERT_EQ(s, 9);
+    REQUIRE(9 == s);
 }
 
-TEST(OptionalTest, HashTest) {
+TEST_CASE("OptionalTest: HashTest", "[optional]") {
     beman::optional::optional<int> o1 = beman::optional::nullopt;
     beman::optional::optional<int> o2 = beman::optional::nullopt;
     beman::optional::optional<int> o3 = 42;
@@ -1007,66 +1007,66 @@ TEST(OptionalTest, HashTest) {
     auto h3 = std::hash<beman::optional::optional<int>>{}(o3);
     auto h4 = std::hash<beman::optional::optional<int>>{}(o4);
 
-    EXPECT_EQ(h1, h2);
-    EXPECT_EQ(h3, h4);
-    EXPECT_NE(h1, h3);
+    CHECK(h2 == h1);
+    CHECK(h4 == h3);
+    CHECK(h3 != h1);
 
     for (int i : std::views::iota(0, 1000)) {
         auto h1 = std::hash<beman::optional::optional<int>>{}(i);
         auto h2 = std::hash<int>{}(i);
-        EXPECT_EQ(h1, h2);
+        CHECK(h2 == h1);
     }
 }
 
-TEST(OptionalTest, CanHoldValueOfImmovableType) {
+TEST_CASE("OptionalTest: CanHoldValueOfImmovableType", "[optional]") {
     using beman::optional::tests::immovable;
 
     beman::optional::optional<immovable> o1(beman::optional::in_place);
-    EXPECT_TRUE(o1);
+    CHECK(o1);
 
     // ...and can reset it with `nullopt`.
     static_assert(noexcept(o1 = beman::optional::nullopt));
     o1 = beman::optional::nullopt;
-    EXPECT_FALSE(o1);
+    CHECK(!o1);
 
     // Also, can construct with `nullopt`.
     beman::optional::optional<immovable> o2 = beman::optional::nullopt;
-    EXPECT_FALSE(o2);
+    CHECK(!o2);
 }
 
 // Moving an `optional<T&>` should not move the remote value.
-TEST(OptionalTest, OptionalFromOptionalRef) {
+TEST_CASE("OptionalTest: OptionalFromOptionalRef", "[optional]") {
     using beman::optional::tests::copyable_from_non_const_lvalue_only;
 
     copyable_from_non_const_lvalue_only cm;
 
     beman::optional::optional<copyable_from_non_const_lvalue_only&> o1 = cm;
-    ASSERT_TRUE(o1);
+    REQUIRE(o1);
 
     {
         beman::optional::optional<copyable_from_non_const_lvalue_only> o2 = o1;
-        ASSERT_TRUE(o2);
+        REQUIRE(o2);
     }
 
     beman::optional::optional<copyable_from_non_const_lvalue_only> o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2 = o1;
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2.reset();
     o2 = o1;
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2.reset();
     o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 }
 
-TEST(OptionalTest, OptionalFromOptionalRefExplicit) {
+TEST_CASE("OptionalTest: OptionalFromOptionalRefExplicit", "[optional]") {
     using beman::optional::tests::copyable_from_non_const_lvalue_only;
     using beman::optional::tests::explicitly_convertible_from_non_const_lvalue_only;
 
@@ -1075,43 +1075,43 @@ TEST(OptionalTest, OptionalFromOptionalRefExplicit) {
     beman::optional::optional<explicitly_convertible_from_non_const_lvalue_only&> o3 = ec;
 
     beman::optional::optional<copyable_from_non_const_lvalue_only> o4(o3);
-    ASSERT_TRUE(o4);
+    REQUIRE(o4);
     beman::optional::optional<copyable_from_non_const_lvalue_only> o5(std::move(o3));
-    ASSERT_TRUE(o5);
+    REQUIRE(o5);
 }
 
-TEST(OptionalTest, OptionalFromOptionalConstRef) {
+TEST_CASE("OptionalTest: OptionalFromOptionalConstRef", "[optional]") {
     using beman::optional::tests::copyable_from_const_lvalue_only;
 
     copyable_from_const_lvalue_only cm;
 
     beman::optional::optional<const copyable_from_const_lvalue_only&> o1 = cm;
-    ASSERT_TRUE(o1);
+    REQUIRE(o1);
 
     {
         beman::optional::optional<copyable_from_const_lvalue_only> o2 = o1;
-        ASSERT_TRUE(o2);
+        REQUIRE(o2);
     }
 
     beman::optional::optional<copyable_from_const_lvalue_only> o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2 = o1;
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2.reset();
     o2 = o1;
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 
     o2.reset();
     o2 = std::move(o1);
-    ASSERT_TRUE(o2);
+    REQUIRE(o2);
 }
 
-TEST(OptionalTest, OptionalFromOptionalConstRefExplicit) {
+TEST_CASE("OptionalTest: OptionalFromOptionalConstRefExplicit", "[optional]") {
     using beman::optional::tests::copyable_from_const_lvalue_only;
     using beman::optional::tests::explicitly_convertible_from_const_lvalue_only;
 
@@ -1120,17 +1120,17 @@ TEST(OptionalTest, OptionalFromOptionalConstRefExplicit) {
     beman::optional::optional<const explicitly_convertible_from_const_lvalue_only&> o3 = ec;
 
     beman::optional::optional<copyable_from_const_lvalue_only> o4(o3);
-    ASSERT_TRUE(o4);
+    REQUIRE(o4);
     beman::optional::optional<copyable_from_const_lvalue_only> o5(std::move(o3));
-    ASSERT_TRUE(o5);
+    REQUIRE(o5);
 }
 
-TEST(OptionalTest, OptionalOfAnyWorks) {
+TEST_CASE("OptionalTest: OptionalOfAnyWorks", "[optional]") {
     beman::optional::optional<std::any> o1 = 42;
 
     beman::optional::optional<std::any> o2 = o1;
-    EXPECT_TRUE(std::any_cast<const int&>(*o2) == 42);
+    CHECK(std::any_cast<const int&>(*o2) == 42);
 
     beman::optional::optional<std::any> o3 = std::move(o1);
-    EXPECT_TRUE(std::any_cast<const int&>(*o3) == 42);
+    CHECK(std::any_cast<const int&>(*o3) == 42);
 }

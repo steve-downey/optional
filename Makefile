@@ -31,7 +31,7 @@ ifeq ($(strip $(TOOLCHAIN)),)
 else
 	_build_name?=build-$(TOOLCHAIN)
 	_build_dir?=.build/
-	_configuration_types?="RelWithDebInfo;Debug;Tsan;Asan;Gcov"
+	_configuration_types?="RelWithDebInfo;Debug;Tsan;Asan;Gcov;Msan"
 	_cmake_args=-DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/etc/$(TOOLCHAIN)-toolchain.cmake
 endif
 

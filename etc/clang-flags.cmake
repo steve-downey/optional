@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_CXX_FLAGS
-    "-stdlib=libc++ -Wall -Wextra "
+    "-stdlib=libstdc++ -Wall -Wextra "
     CACHE STRING
     "CXX_FLAGS"
     FORCE
@@ -46,3 +46,9 @@ set(CMAKE_CXX_FLAGS_GCOV
     FORCE
 )
 set(CMAKE_LINKER_FLAGS_GCOV "--coverage" CACHE STRING "Linker GCOV Flags" FORCE)
+set(CMAKE_CXX_FLAGS_MSAN
+    "-O3 -g -DNDEBUG -fsanitize=memory"
+    CACHE STRING
+    "C++ MSAN Flags"
+    FORCE
+)

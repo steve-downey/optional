@@ -3,23 +3,23 @@
 
 #include <beman/optional/optional.hpp>
 
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
 
 constexpr int                            get_int(int) { return 42; }
 constexpr beman::optional::optional<int> get_opt_int(int) { return 42; }
 
-TEST(OptionalMonadicTest, Transform) {
+TEST_CASE("OptionalMonadicTest: Transform", "[optional]") {
     // lhs is empty
     beman::optional::optional<int> o1;
     auto                           o1r = o1.transform([](int i) { return i + 2; });
     static_assert((std::is_same<decltype(o1r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(!o1r);
+    CHECK(!o1r);
 
     // lhs has value
     beman::optional::optional<int> o2  = 40;
     auto                           o2r = o2.transform([](int i) { return i + 2; });
     static_assert((std::is_same<decltype(o2r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o2r.value() == 42);
+    CHECK(o2r.value() == 42);
 
     struct rval_call_transform {
         double operator()(int) && { return 42.0; };
@@ -29,61 +29,61 @@ TEST(OptionalMonadicTest, Transform) {
     beman::optional::optional<int> o3  = 42;
     auto                           o3r = o3.transform(rval_call_transform{});
     static_assert((std::is_same<decltype(o3r), beman::optional::optional<double>>::value));
-    EXPECT_TRUE(o3r.value() == 42);
+    CHECK(o3r.value() == 42);
 
     // ensure that lhs is forwarded
     beman::optional::optional<int> o4  = 40;
     auto                           o4r = std::move(o4).transform([](int&& i) { return i + 2; });
     static_assert((std::is_same<decltype(o4r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o4r.value() == 42);
+    CHECK(o4r.value() == 42);
 
     // ensure that lhs is const-propagated
     const beman::optional::optional<int> o5  = 40;
     auto                                 o5r = o5.transform([](const int& i) { return i + 2; });
     static_assert((std::is_same<decltype(o5r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o5r.value() == 42);
+    CHECK(o5r.value() == 42);
 
     // test each overload in turn
     beman::optional::optional<int> o8  = 42;
     auto                           o8r = o8.transform([](int) { return 42; });
-    EXPECT_TRUE(*o8r == 42);
+    CHECK(*o8r == 42);
 
     beman::optional::optional<int> o12  = 42;
     auto                           o12r = std::move(o12).transform([](int) { return 42; });
-    EXPECT_TRUE(*o12r == 42);
+    CHECK(*o12r == 42);
 
     const beman::optional::optional<int> o16  = 42;
     auto                                 o16r = o16.transform([](int) { return 42; });
-    EXPECT_TRUE(*o16r == 42);
+    CHECK(*o16r == 42);
 
     const beman::optional::optional<int> o20  = 42;
     auto                                 o20r = std::move(o20).transform([](int) { return 42; });
-    EXPECT_TRUE(*o20r == 42);
+    CHECK(*o20r == 42);
 
     beman::optional::optional<int> o24  = beman::optional::nullopt;
     auto                           o24r = o24.transform([](int) { return 42; });
-    EXPECT_TRUE(!o24r);
+    CHECK(!o24r);
 
     beman::optional::optional<int> o28  = beman::optional::nullopt;
     auto                           o28r = std::move(o28).transform([](int) { return 42; });
-    EXPECT_TRUE(!o28r);
+    CHECK(!o28r);
 
     const beman::optional::optional<int> o32  = beman::optional::nullopt;
     auto                                 o32r = o32.transform([](int) { return 42; });
-    EXPECT_TRUE(!o32r);
+    CHECK(!o32r);
 
     const beman::optional::optional<int> o36  = beman::optional::nullopt;
     auto                                 o36r = std::move(o36).transform([](int) { return 42; });
-    EXPECT_TRUE(!o36r);
+    CHECK(!o36r);
 
     // callable which returns a reference
     beman::optional::optional<int>        o38  = 42;
     beman::optional::optional<const int&> o38r = o38.transform([](int& i) -> const int& { return i; });
-    EXPECT_TRUE(o38r);
-    EXPECT_TRUE(*o38r == 42);
+    CHECK(o38r);
+    CHECK(*o38r == 42);
 }
 
-TEST(OptionalMonadicTest, TransformConstexpr) {
+TEST_CASE("OptionalMonadicTest: TransformConstexpr", "[optional]") {
     // test each overload in turn
     constexpr beman::optional::optional<int> o16  = 42;
     constexpr auto                           o16r = o16.transform(get_int);
@@ -101,18 +101,18 @@ TEST(OptionalMonadicTest, TransformConstexpr) {
     static_assert(!o36r);
 }
 
-TEST(OptionalMonadicTest, Transform2) {
+TEST_CASE("OptionalMonadicTest: Transform2", "[optional]") {
     // lhs is empty
     beman::optional::optional<int> o1;
     auto                           o1r = o1.transform([](int i) { return i + 2; });
     static_assert((std::is_same<decltype(o1r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(!o1r);
+    CHECK(!o1r);
 
     // lhs has value
     beman::optional::optional<int> o2  = 40;
     auto                           o2r = o2.transform([](int i) { return i + 2; });
     static_assert((std::is_same<decltype(o2r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o2r.value() == 42);
+    CHECK(o2r.value() == 42);
 
     struct rval_call_transform {
         double operator()(int) && { return 42.0; };
@@ -122,55 +122,55 @@ TEST(OptionalMonadicTest, Transform2) {
     beman::optional::optional<int> o3  = 42;
     auto                           o3r = o3.transform(rval_call_transform{});
     static_assert((std::is_same<decltype(o3r), beman::optional::optional<double>>::value));
-    EXPECT_TRUE(o3r.value() == 42);
+    CHECK(o3r.value() == 42);
 
     // ensure that lhs is forwarded
     beman::optional::optional<int> o4  = 40;
     auto                           o4r = std::move(o4).transform([](int&& i) { return i + 2; });
     static_assert((std::is_same<decltype(o4r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o4r.value() == 42);
+    CHECK(o4r.value() == 42);
 
     // ensure that lhs is const-propagated
     const beman::optional::optional<int> o5  = 40;
     auto                                 o5r = o5.transform([](const int& i) { return i + 2; });
     static_assert((std::is_same<decltype(o5r), beman::optional::optional<int>>::value));
-    EXPECT_TRUE(o5r.value() == 42);
+    CHECK(o5r.value() == 42);
 
     // test each overload in turn
     beman::optional::optional<int> o8  = 42;
     auto                           o8r = o8.transform([](int) { return 42; });
-    EXPECT_TRUE(*o8r == 42);
+    CHECK(*o8r == 42);
 
     beman::optional::optional<int> o12  = 42;
     auto                           o12r = std::move(o12).transform([](int) { return 42; });
-    EXPECT_TRUE(*o12r == 42);
+    CHECK(*o12r == 42);
 
     const beman::optional::optional<int> o16  = 42;
     auto                                 o16r = o16.transform([](int) { return 42; });
-    EXPECT_TRUE(*o16r == 42);
+    CHECK(*o16r == 42);
 
     const beman::optional::optional<int> o20  = 42;
     auto                                 o20r = std::move(o20).transform([](int) { return 42; });
-    EXPECT_TRUE(*o20r == 42);
+    CHECK(*o20r == 42);
 
     beman::optional::optional<int> o24  = beman::optional::nullopt;
     auto                           o24r = o24.transform([](int) { return 42; });
-    EXPECT_TRUE(!o24r);
+    CHECK(!o24r);
 
     beman::optional::optional<int> o28  = beman::optional::nullopt;
     auto                           o28r = std::move(o28).transform([](int) { return 42; });
-    EXPECT_TRUE(!o28r);
+    CHECK(!o28r);
 
     const beman::optional::optional<int> o32  = beman::optional::nullopt;
     auto                                 o32r = o32.transform([](int) { return 42; });
-    EXPECT_TRUE(!o32r);
+    CHECK(!o32r);
 
     const beman::optional::optional<int> o36  = beman::optional::nullopt;
     auto                                 o36r = std::move(o36).transform([](int) { return 42; });
-    EXPECT_TRUE(!o36r);
+    CHECK(!o36r);
 }
 
-TEST(OptionalMonadicTest, TransformConstxpr) {
+TEST_CASE("OptionalMonadicTest: TransformConstxpr", "[optional]") {
     // test each overload in turn
     constexpr beman::optional::optional<int> o16  = 42;
     constexpr auto                           o16r = o16.transform(get_int);
@@ -188,30 +188,30 @@ TEST(OptionalMonadicTest, TransformConstxpr) {
     static_assert(!o36r);
 }
 
-TEST(OptionalMonadicTest, and_then) {
+TEST_CASE("OptionalMonadicTest: and_then", "[optional]") {
     // lhs is empty
     beman::optional::optional<int> o1;
     auto                           o1r = o1.and_then([](int) { return beman::optional::optional<float>{42}; });
     static_assert((std::is_same<decltype(o1r), beman::optional::optional<float>>::value));
-    EXPECT_TRUE(!o1r);
+    CHECK(!o1r);
 
     // lhs has value
     beman::optional::optional<int> o2  = 12;
     auto                           o2r = o2.and_then([](int) { return beman::optional::optional<float>{42}; });
     static_assert((std::is_same<decltype(o2r), beman::optional::optional<float>>::value));
-    EXPECT_TRUE(o2r.value() == 42.f);
+    CHECK(o2r.value() == 42.f);
 
     // lhs is empty, rhs returns empty
     beman::optional::optional<int> o3;
     auto                           o3r = o3.and_then([](int) { return beman::optional::optional<float>{}; });
     static_assert((std::is_same<decltype(o3r), beman::optional::optional<float>>::value));
-    EXPECT_TRUE(!o3r);
+    CHECK(!o3r);
 
     // rhs returns empty
     beman::optional::optional<int> o4  = 12;
     auto                           o4r = o4.and_then([](int) { return beman::optional::optional<float>{}; });
     static_assert((std::is_same<decltype(o4r), beman::optional::optional<float>>::value));
-    EXPECT_TRUE(!o4r);
+    CHECK(!o4r);
 
     struct rval_call_and_then {
         beman::optional::optional<double> operator()(int) && { return beman::optional::optional<double>(42.0); };
@@ -221,105 +221,105 @@ TEST(OptionalMonadicTest, and_then) {
     beman::optional::optional<int> o5  = 42;
     auto                           o5r = o5.and_then(rval_call_and_then{});
     static_assert((std::is_same<decltype(o5r), beman::optional::optional<double>>::value));
-    EXPECT_TRUE(o5r.value() == 42);
+    CHECK(o5r.value() == 42);
 
     // ensure that lhs is forwarded
     beman::optional::optional<int> o6 = 42;
     auto o6r = std::move(o6).and_then([](int&& i) { return beman::optional::optional<double>(i); });
     static_assert((std::is_same<decltype(o6r), beman::optional::optional<double>>::value));
-    EXPECT_TRUE(o6r.value() == 42);
+    CHECK(o6r.value() == 42);
 
     // ensure that function object is const-propagated
     const beman::optional::optional<int> o7 = 42;
     auto o7r = o7.and_then([](const int& i) { return beman::optional::optional<double>(i); });
     static_assert((std::is_same<decltype(o7r), beman::optional::optional<double>>::value));
-    EXPECT_TRUE(o7r.value() == 42);
+    CHECK(o7r.value() == 42);
 
     // test each overload in turn
     beman::optional::optional<int> o8  = 42;
     auto                           o8r = o8.and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(*o8r == 42);
+    CHECK(*o8r == 42);
 
     beman::optional::optional<int> o9 = 42;
     auto o9r                          = std::move(o9).and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(*o9r == 42);
+    CHECK(*o9r == 42);
 
     const beman::optional::optional<int> o10  = 42;
     auto                                 o10r = o10.and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(*o10r == 42);
+    CHECK(*o10r == 42);
 
     const beman::optional::optional<int> o11 = 42;
     auto o11r = std::move(o11).and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(*o11r == 42);
+    CHECK(*o11r == 42);
 
     beman::optional::optional<int> o16  = beman::optional::nullopt;
     auto                           o16r = o16.and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(!o16r);
+    CHECK(!o16r);
 
     beman::optional::optional<int> o17 = beman::optional::nullopt;
     auto o17r = std::move(o17).and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(!o17r);
+    CHECK(!o17r);
 
     const beman::optional::optional<int> o18  = beman::optional::nullopt;
     auto                                 o18r = o18.and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(!o18r);
+    CHECK(!o18r);
 
     const beman::optional::optional<int> o19 = beman::optional::nullopt;
     auto o19r = std::move(o19).and_then([](int) { return beman::optional::make_optional(42); });
-    EXPECT_TRUE(!o19r);
+    CHECK(!o19r);
 
     int                             i = 3;
     beman::optional::optional<int&> o20{i};
     std::move(o20).and_then([](int& r) { return beman::optional::optional<int&>{++r}; });
-    EXPECT_TRUE(o20);
-    EXPECT_TRUE(i == 4);
+    CHECK(o20);
+    CHECK(i == 4);
 }
 
-TEST(OptionalMonadicTest, Constexpr_and_then) {
+TEST_CASE("OptionalMonadicTest: Constexpr_and_then", "[optional]") {
     constexpr beman::optional::optional<int> o10  = 42;
     constexpr auto                           o10r = o10.and_then(get_opt_int);
-    EXPECT_TRUE(*o10r == 42);
+    CHECK(*o10r == 42);
 
     constexpr beman::optional::optional<int> o11  = 42;
     constexpr auto                           o11r = std::move(o11).and_then(get_opt_int);
-    EXPECT_TRUE(*o11r == 42);
+    CHECK(*o11r == 42);
 
     constexpr beman::optional::optional<int> o18  = beman::optional::nullopt;
     constexpr auto                           o18r = o18.and_then(get_opt_int);
-    EXPECT_TRUE(!o18r);
+    CHECK(!o18r);
 
     constexpr beman::optional::optional<int> o19  = beman::optional::nullopt;
     constexpr auto                           o19r = std::move(o19).and_then(get_opt_int);
-    EXPECT_TRUE(!o19r);
+    CHECK(!o19r);
 }
 
-TEST(OptionalMonadicTest, or_else) {
+TEST_CASE("OptionalMonadicTest: or_else", "[optional]") {
     beman::optional::optional<int> o1 = 42;
-    EXPECT_TRUE(*(o1.or_else([] { return beman::optional::make_optional(13); })) == 42);
+    CHECK(*(o1.or_else([] { return beman::optional::make_optional(13); })) == 42);
 
     beman::optional::optional<int> o2;
-    EXPECT_EQ(*(o2.or_else([] { return beman::optional::make_optional(13); })), 13);
+    CHECK(13 == *(o2.or_else([] { return beman::optional::make_optional(13); })));
 
     /*
       optional<T> or_else(F&& f) && {
     */
-    EXPECT_TRUE(*(std::move(o1).or_else([] { return beman::optional::make_optional(13); })) == 42);
-    EXPECT_EQ(*(std::move(o2).or_else([] { return beman::optional::make_optional(13); })), 13);
+    CHECK(*(std::move(o1).or_else([] { return beman::optional::make_optional(13); })) == 42);
+    CHECK(13 == *(std::move(o2).or_else([] { return beman::optional::make_optional(13); })));
 }
 
-TEST(OptionalMonadicTest, Constexpr_or_else) {
+TEST_CASE("OptionalMonadicTest: Constexpr_or_else", "[optional]") {
     constexpr beman::optional::optional<int> o1 = 42;
     constexpr auto test = (*(o1.or_else([] { return beman::optional::make_optional(13); })) == 42);
-    EXPECT_TRUE(test);
+    CHECK(test);
     constexpr beman::optional::optional<int> o2;
     constexpr auto test2 = *(o2.or_else([] { return beman::optional::make_optional(13); })) == 13;
-    EXPECT_TRUE(test2);
+    CHECK(test2);
 
     /*
       optional<T> or_else(F&& f) && {
     */
     constexpr auto test3 = (*(std::move(o1).or_else([] { return beman::optional::make_optional(13); })) == 42);
-    EXPECT_TRUE(test3);
+    CHECK(test3);
     constexpr auto test4 = *(std::move(o2).or_else([] { return beman::optional::make_optional(13); })) == 13;
-    EXPECT_TRUE(test4);
+    CHECK(test4);
 }

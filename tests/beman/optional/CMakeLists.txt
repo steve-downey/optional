@@ -24,15 +24,13 @@ target_sources(
 
 target_link_libraries(
     beman_optional_test
-    PRIVATE beman_optional GTest::gtest GTest::gtest_main
+    PRIVATE beman_optional Catch2::Catch2 Catch2::Catch2WithMain
 )
 # Issue #32: Re-enable ASAN run CI/clang-19.
 #
 # Note: clang-19 + gtest_discover_tests + Asan setup causes errors on some
 # platforms. Temporary switch to gtest_add_tests and skip some Asan checks.
 # Change also applied for CI flows.
-include(GoogleTest)
-gtest_add_tests(TARGET beman_optional_test "" AUTO)
 
 add_library(constructor_fails test_constructor_fail.cpp)
 
