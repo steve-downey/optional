@@ -1,0 +1,239 @@
+# class `beman::optional::optional` 
+
+## Summary
+
+ Members                        | Descriptions                                
+--------------------------------|---------------------------------------------
+`public empty `[`_`](#classbeman_1_1optional_1_1optional_1a1814481a6e7600c4a6f074d24f1e2de4) | 
+`public T `[`value_`](#classbeman_1_1optional_1_1optional_1a8f8d911d75653dfe72741dc3431fe740) | 
+`public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1afa442c06abd82de8cbabeafdeccf23a8)`() noexcept` | 
+`public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ab5e1df4d22f084ccc18f7f776fc06411)`(nullopt_t) noexcept` | 
+`public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a6e96bf0926389ddfd0f83e6f7d11f9e7)`(const optional & rhs)` | 
+`public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a57d14f0bedc03b049d37dcd96aa7f3fe)`(const optional &) = default` | 
+`public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ad2c3f56b24c61b085b53cd9688199de1)`(optional && rhs)` | 
+`public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a8c1214300c7a79c170c716bb22824b2c)`(optional &&) = default` | 
+`public template<>`  <br/>`inline constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_1af27e6b6d80787e82db114a3be987512f)`(in_place_t,Args &&... args)` | Constructs the stored value in-place using the given arguments.
+`public template<>`  <br/>`inline constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_1af75c591a86a8ee7d0185e67189234039)`(in_place_t,std::initializer_list< U > il,Args &&... args)` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ac4146fd29dd405c306bb8a30fba3a989)`(!std::is_convertible_v< U, T >)` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ab2d2eb0bf74ff29513838d9641479199)`(!std::is_convertible_v< U, T >) const` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ad3b346735cb7cf83a810ac6c0b30b166)`(!std::is_convertible_v< U, T >)` | 
+`public inline constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_1af2f6a1107b25308a07cbd4b80482531a)`() = default` | 
+`public constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_1aa6f4357c31a7ffb15ccb92fe23465fca)`()` | 
+`public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a475ab64582866ead22f7af2966455f23)`(nullopt_t) noexcept` | 
+`public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a1630d1de962bdad40fb5c43083a935e1)`(const optional & rhs)` | 
+`public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1acc77319af3acf2481397213952ff17d3)`(const optional &) = default` | 
+`public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a2e2d9f8e12fbf79f210708a520646674)`(optional && rhs)` | 
+`public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aaa527f81b17e72ae27f347dbb9aee19b)`(optional &&) = default` | 
+`public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1adb7fe1c0bcc29a9c97c3410c9537ff70)`(U && u)` | 
+`public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aa7163581d56c09cbdfb3ee228a40562d)`(const optional< U > & rhs)` | 
+`public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aaaeb315b6e8cb099968dd7fc51634c3e)`(optional< U > && rhs)` | 
+`public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_1ac20ea14c0765679cb2bf4c74b5c82bd5)`(Args &&... args)` | Constructs the value in-place, destroying the current one if there is one.
+`public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_1a3057f723870a4c2c67ed0be186a96481)`(std::initializer_list< U > il,Args &&... args)` | 
+`public inline constexpr void `[`swap`](#classbeman_1_1optional_1_1optional_1a3aa22eefcb8377a2ff2c3eaba050cc23)`(optional & rhs)` | Swaps this optional with the other.
+`public inline constexpr iterator `[`begin`](#classbeman_1_1optional_1_1optional_1a8b80251c803ff7de9e28e4e3cf16a6f2)`() noexcept` | 
+`public inline constexpr const_iterator `[`begin`](#classbeman_1_1optional_1_1optional_1a07d0a37da89665a15c7910afbf8e199c)`() const noexcept` | 
+`public inline constexpr iterator `[`end`](#classbeman_1_1optional_1_1optional_1a59208fb74a69302b36ab42fa4d61ce74)`() noexcept` | 
+`public inline constexpr const_iterator `[`end`](#classbeman_1_1optional_1_1optional_1ab6746328dd0c1ff4e363f7a5e89e910e)`() const noexcept` | 
+`public inline constexpr const T * `[`operator->`](#classbeman_1_1optional_1_1optional_1aa75425844992799ee8cfb7f1ab7c84ce)`() const` | Returns a pointer to the stored value.
+`public inline constexpr T * `[`operator->`](#classbeman_1_1optional_1_1optional_1a11514681edbb160cf2efc43ef55c5528)`()` | 
+`public inline constexpr T & `[`operator*`](#classbeman_1_1optional_1_1optional_1af6278cfdf226813b44e48bcca9e9c160)`()` | Returns the stored value.
+`public inline constexpr const T & `[`operator*`](#classbeman_1_1optional_1_1optional_1ae2066b2ca9b88bda6f8a31f75c334b00)`() const` | 
+`public inline constexpr T && `[`operator*`](#classbeman_1_1optional_1_1optional_1aa8cf9e9651cd496ce32f7b7bcb810874)`()` | 
+`public inline constexpr explicit `[`operator bool`](#classbeman_1_1optional_1_1optional_1a2b3f8f20f9fc411b656ebcc9c2a45fbc)`() const noexcept` | 
+`public inline constexpr bool `[`has_value`](#classbeman_1_1optional_1_1optional_1a30353c697fc17e7b421cde25cab03d24)`() const noexcept` | Returns whether or not the optional has a value.
+`public inline constexpr T & `[`value`](#classbeman_1_1optional_1_1optional_1a403cec6d7cc62ed49dc6c1a932da6de3)`()` | Returns the contained value if there is one, otherwise throws bad_optional_access
+`public inline constexpr const T & `[`value`](#classbeman_1_1optional_1_1optional_1a78ed5dfa0c06503c1a682e6790727498)`() const` | 
+`public inline constexpr T && `[`value`](#classbeman_1_1optional_1_1optional_1ad03f9b933291169eeba5e53cdfd50867)`()` | 
+`public template<>`  <br/>`inline constexpr T `[`value_or`](#classbeman_1_1optional_1_1optional_1a40912ec1c3bc9bb333b724fe1be49d02)`(U && u) const` | Returns the stored value if there is one, otherwise returns `u`
+`public template<>`  <br/>`inline constexpr T `[`value_or`](#classbeman_1_1optional_1_1optional_1a272e133b18664a90945451e6bf3c5697)`(U && u)` | 
+`public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a4e2cee231a67ca48f82715cdd334bf94)`(F && f)` | 
+`public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a09d36e0c91acecd4dd1983c8159f8c85)`(F && f)` | 
+`public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1ab90dcd5e2580af7c3e885428a939cfe4)`(F && f) const` | 
+`public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a1f777fa3e547b9e56ad0633bc8714133)`(F && f) const` | 
+`public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ab409242d8b0b3ed4fda5d4c66e3e2db6)`(F && f)` | Carries out some operation on the stored object if there is one.
+`public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1a6989e2a3dc4e30dd38a1a8d689616f05)`(F && f)` | 
+`public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ae7aae84b3e296d65d93b132bca8e79dc)`(F && f) const` | 
+`public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ae686bd0b6e17116c73a1c2aa2cae116d)`(F && f) const` | 
+`public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_1a8d50f38b621a7659c60d33b1d1d83340)`(F && f) const` | 
+`public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_1ab41ce777f29339fd953ffae0c7ac963f)`(F && f)` | 
+`public constexpr void `[`reset`](#classbeman_1_1optional_1_1optional_1a1aecd22269bb50bb1b0ca38a893f8db9)`() noexcept` | 
+`public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a143d2cbf17edbfcc85abdb78f666dc77)`(U && u)` | Constructs the stored value with `u`.
+`public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a14058dbc4c83fac2455df7488a73b21a)`(const optional< U > & rhs)` | Converting copy constructor.
+`public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ab82258f34dc1cdd58b5c58687da00e04)`(optional< U > && rhs)` | Converting move constructor.
+`public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a2f66e32d69388df3d7e3acb601058776)`(U && u)` | Assigns the stored value from `u`, destroying the old value if there was one.
+`public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a49295670a71a3219a5d308bd20366a82)`(const optional< U > & rhs)` | Converting copy assignment operator.
+`public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a903be85207735fdef630b75ba3479402)`(optional< U > && rhs)` | Converting move assignment operator.
+`public template<>`  <br/>`constexpr optional< T > `[`or_else`](#classbeman_1_1optional_1_1optional_1a5afab34c22775a484fca0709156ef6c2)`(F && f) const` | Calls `f` if the optional is empty.
+`public template<>`  <br/>`constexpr optional< T > `[`or_else`](#classbeman_1_1optional_1_1optional_1a574c5b3ae760ff61d58fa37ef3a93133)`(F && f)` | 
+`typedef `[`value_type`](#classbeman_1_1optional_1_1optional_1aefbcf8b894d0bf8d5bbe22cd12f2765f) | 
+`typedef `[`iterator`](#classbeman_1_1optional_1_1optional_1a9a42c36423ec8c924fd5844b9bccd94c) | 
+`typedef `[`const_iterator`](#classbeman_1_1optional_1_1optional_1a553d0aad53c04c380b27e83d9d43cbc5) | 
+
+## Members
+
+#### `public empty `[`_`](#classbeman_1_1optional_1_1optional_1a1814481a6e7600c4a6f074d24f1e2de4) 
+
+#### `public T `[`value_`](#classbeman_1_1optional_1_1optional_1a8f8d911d75653dfe72741dc3431fe740) 
+
+#### `public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1afa442c06abd82de8cbabeafdeccf23a8)`() noexcept` 
+
+#### `public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ab5e1df4d22f084ccc18f7f776fc06411)`(nullopt_t) noexcept` 
+
+#### `public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a6e96bf0926389ddfd0f83e6f7d11f9e7)`(const optional & rhs)` 
+
+#### `public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a57d14f0bedc03b049d37dcd96aa7f3fe)`(const optional &) = default` 
+
+#### `public inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ad2c3f56b24c61b085b53cd9688199de1)`(optional && rhs)` 
+
+#### `public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a8c1214300c7a79c170c716bb22824b2c)`(optional &&) = default` 
+
+#### `public template<>`  <br/>`inline constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_1af27e6b6d80787e82db114a3be987512f)`(in_place_t,Args &&... args)` 
+
+Constructs the stored value in-place using the given arguments.
+
+#### `public template<>`  <br/>`inline constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_1af75c591a86a8ee7d0185e67189234039)`(in_place_t,std::initializer_list< U > il,Args &&... args)` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ac4146fd29dd405c306bb8a30fba3a989)`(!std::is_convertible_v< U, T >)` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ab2d2eb0bf74ff29513838d9641479199)`(!std::is_convertible_v< U, T >) const` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_1ad3b346735cb7cf83a810ac6c0b30b166)`(!std::is_convertible_v< U, T >)` 
+
+#### `public inline constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_1af2f6a1107b25308a07cbd4b80482531a)`() = default` 
+
+#### `public constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_1aa6f4357c31a7ffb15ccb92fe23465fca)`()` 
+
+#### `public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a475ab64582866ead22f7af2966455f23)`(nullopt_t) noexcept` 
+
+#### `public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a1630d1de962bdad40fb5c43083a935e1)`(const optional & rhs)` 
+
+#### `public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1acc77319af3acf2481397213952ff17d3)`(const optional &) = default` 
+
+#### `public inline constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1a2e2d9f8e12fbf79f210708a520646674)`(optional && rhs)` 
+
+#### `public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aaa527f81b17e72ae27f347dbb9aee19b)`(optional &&) = default` 
+
+#### `public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1adb7fe1c0bcc29a9c97c3410c9537ff70)`(U && u)` 
+
+#### `public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aa7163581d56c09cbdfb3ee228a40562d)`(const optional< U > & rhs)` 
+
+#### `public template<>`  <br/>`constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_1aaaeb315b6e8cb099968dd7fc51634c3e)`(optional< U > && rhs)` 
+
+#### `public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_1ac20ea14c0765679cb2bf4c74b5c82bd5)`(Args &&... args)` 
+
+Constructs the value in-place, destroying the current one if there is one.
+
+#### `public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_1a3057f723870a4c2c67ed0be186a96481)`(std::initializer_list< U > il,Args &&... args)` 
+
+#### `public inline constexpr void `[`swap`](#classbeman_1_1optional_1_1optional_1a3aa22eefcb8377a2ff2c3eaba050cc23)`(optional & rhs)` 
+
+Swaps this optional with the other.
+
+If neither optionals have a value, nothing happens. If both have a value, the values are swapped. If one has a value, it is moved to the other and the movee is left valueless.
+
+#### `public inline constexpr iterator `[`begin`](#classbeman_1_1optional_1_1optional_1a8b80251c803ff7de9e28e4e3cf16a6f2)`() noexcept` 
+
+#### `public inline constexpr const_iterator `[`begin`](#classbeman_1_1optional_1_1optional_1a07d0a37da89665a15c7910afbf8e199c)`() const noexcept` 
+
+#### `public inline constexpr iterator `[`end`](#classbeman_1_1optional_1_1optional_1a59208fb74a69302b36ab42fa4d61ce74)`() noexcept` 
+
+#### `public inline constexpr const_iterator `[`end`](#classbeman_1_1optional_1_1optional_1ab6746328dd0c1ff4e363f7a5e89e910e)`() const noexcept` 
+
+#### `public inline constexpr const T * `[`operator->`](#classbeman_1_1optional_1_1optional_1aa75425844992799ee8cfb7f1ab7c84ce)`() const` 
+
+Returns a pointer to the stored value.
+
+#### `public inline constexpr T * `[`operator->`](#classbeman_1_1optional_1_1optional_1a11514681edbb160cf2efc43ef55c5528)`()` 
+
+#### `public inline constexpr T & `[`operator*`](#classbeman_1_1optional_1_1optional_1af6278cfdf226813b44e48bcca9e9c160)`()` 
+
+Returns the stored value.
+
+#### `public inline constexpr const T & `[`operator*`](#classbeman_1_1optional_1_1optional_1ae2066b2ca9b88bda6f8a31f75c334b00)`() const` 
+
+#### `public inline constexpr T && `[`operator*`](#classbeman_1_1optional_1_1optional_1aa8cf9e9651cd496ce32f7b7bcb810874)`()` 
+
+#### `public inline constexpr explicit `[`operator bool`](#classbeman_1_1optional_1_1optional_1a2b3f8f20f9fc411b656ebcc9c2a45fbc)`() const noexcept` 
+
+#### `public inline constexpr bool `[`has_value`](#classbeman_1_1optional_1_1optional_1a30353c697fc17e7b421cde25cab03d24)`() const noexcept` 
+
+Returns whether or not the optional has a value.
+
+#### `public inline constexpr T & `[`value`](#classbeman_1_1optional_1_1optional_1a403cec6d7cc62ed49dc6c1a932da6de3)`()` 
+
+Returns the contained value if there is one, otherwise throws bad_optional_access
+
+#### `public inline constexpr const T & `[`value`](#classbeman_1_1optional_1_1optional_1a78ed5dfa0c06503c1a682e6790727498)`() const` 
+
+#### `public inline constexpr T && `[`value`](#classbeman_1_1optional_1_1optional_1ad03f9b933291169eeba5e53cdfd50867)`()` 
+
+#### `public template<>`  <br/>`inline constexpr T `[`value_or`](#classbeman_1_1optional_1_1optional_1a40912ec1c3bc9bb333b724fe1be49d02)`(U && u) const` 
+
+Returns the stored value if there is one, otherwise returns `u`
+
+#### `public template<>`  <br/>`inline constexpr T `[`value_or`](#classbeman_1_1optional_1_1optional_1a272e133b18664a90945451e6bf3c5697)`(U && u)` 
+
+#### `public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a4e2cee231a67ca48f82715cdd334bf94)`(F && f)` 
+
+#### `public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a09d36e0c91acecd4dd1983c8159f8c85)`(F && f)` 
+
+#### `public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1ab90dcd5e2580af7c3e885428a939cfe4)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_1a1f777fa3e547b9e56ad0633bc8714133)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ab409242d8b0b3ed4fda5d4c66e3e2db6)`(F && f)` 
+
+Carries out some operation on the stored object if there is one.
+
+#### `public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1a6989e2a3dc4e30dd38a1a8d689616f05)`(F && f)` 
+
+#### `public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ae7aae84b3e296d65d93b132bca8e79dc)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_1ae686bd0b6e17116c73a1c2aa2cae116d)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_1a8d50f38b621a7659c60d33b1d1d83340)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_1ab41ce777f29339fd953ffae0c7ac963f)`(F && f)` 
+
+#### `public constexpr void `[`reset`](#classbeman_1_1optional_1_1optional_1a1aecd22269bb50bb1b0ca38a893f8db9)`() noexcept` 
+
+#### `public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a143d2cbf17edbfcc85abdb78f666dc77)`(U && u)` 
+
+Constructs the stored value with `u`.
+
+#### `public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1a14058dbc4c83fac2455df7488a73b21a)`(const optional< U > & rhs)` 
+
+Converting copy constructor.
+
+#### `public template<>`  <br/>`inline constexpr `[`optional`](#classbeman_1_1optional_1_1optional_1ab82258f34dc1cdd58b5c58687da00e04)`(optional< U > && rhs)` 
+
+Converting move constructor.
+
+#### `public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a2f66e32d69388df3d7e3acb601058776)`(U && u)` 
+
+Assigns the stored value from `u`, destroying the old value if there was one.
+
+#### `public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a49295670a71a3219a5d308bd20366a82)`(const optional< U > & rhs)` 
+
+Converting copy assignment operator.
+
+Copies the value from `rhs` if there is one. Otherwise resets the stored value in `*this`.
+
+#### `public template<>`  <br/>`inline constexpr optional< T > & `[`operator=`](#classbeman_1_1optional_1_1optional_1a903be85207735fdef630b75ba3479402)`(optional< U > && rhs)` 
+
+Converting move assignment operator.
+
+Moves the value from `rhs` if there is one. Otherwise resets the stored value in `*this`.
+
+#### `public template<>`  <br/>`constexpr optional< T > `[`or_else`](#classbeman_1_1optional_1_1optional_1a5afab34c22775a484fca0709156ef6c2)`(F && f) const` 
+
+Calls `f` if the optional is empty.
+
+#### `public template<>`  <br/>`constexpr optional< T > `[`or_else`](#classbeman_1_1optional_1_1optional_1a574c5b3ae760ff61d58fa37ef3a93133)`(F && f)` 
+
+#### `typedef `[`value_type`](#classbeman_1_1optional_1_1optional_1aefbcf8b894d0bf8d5bbe22cd12f2765f) 
+
+#### `typedef `[`iterator`](#classbeman_1_1optional_1_1optional_1a9a42c36423ec8c924fd5844b9bccd94c) 
+
+#### `typedef `[`const_iterator`](#classbeman_1_1optional_1_1optional_1a553d0aad53c04c380b27e83d9d43cbc5) 
+

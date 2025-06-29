@@ -1,0 +1,111 @@
+# class `beman::optional::optional< T & >` 
+
+## Summary
+
+ Members                        | Descriptions                                
+--------------------------------|---------------------------------------------
+`public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a67edf5eae97d550713ca89108109dcf5)`() noexcept` | 
+`public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa351491b602c8f171a9a768c5d37d5bd)`(nullopt_t) noexcept` | 
+`public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1af5c228bdfe1d9c6f54ae2471fa8633e5)`(const optional & rhs) = default` | 
+`public template<>`  <br/>`constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3cd88c454279117bc6a89f9435ad2f76)`(in_place_t,Arg && arg)` | 
+`public template<>`  <br/>`inline constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a8df0d598150e1459945e2f5179adcb0a)`(!std::is_convertible_v< U, T & >)` | 
+`public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a48a0f73cc425873a5de550d6acf30ec4)`(U && u) = delete` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aaf34b7f62a3e5eba402287b31c624216)`(!std::is_convertible_v< U &, T & >)` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a96cfb7f79dc229527069fc1ec293f27e)`(!std::is_convertible_v< const U &, T & >) const` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a1b5ec942c7917f67ac7c0666daca9da0)`(!std::is_convertible_v< U, T & >)` | 
+`public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a7ee64d17301131d0902cef70de06c304)`(!std::is_convertible_v< const U, T & >) const` | 
+`public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aee389853b9a8df41254d1b7cffa36270)`(optional< U > & rhs) = delete` | 
+`public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa10141f55a1a937944a1df4b96e2b711)`(const optional< U > & rhs) = delete` | 
+`public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3fa3cc088683bc7df87bc5c6f25d5409)`(optional< U > && rhs) = delete` | 
+`public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa01ee211f6d6354a00a87b4a0a1b5cdb)`(const optional< U > && rhs) = delete` | 
+`public constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4d14bdbc1e90bdb1cf2ee0683e1ea2d3)`() = default` | 
+`public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3b35d69f0dbf5cc26d6483477523db82)`(nullopt_t) noexcept` | 
+`public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aad2a0e569774be08a4ee79a151cdd02e)`(const optional & rhs) = default` | 
+`public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a686f364426b25ae014e985bbb9b6f1c9)`(U && u)` | 
+`public constexpr void `[`swap`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a1377d48c623415fccd805d77bd10a104)`(optional & rhs) noexcept` | 
+`public constexpr iterator `[`begin`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a51a2ee589805c7501265949b5bc028d5)`() const noexcept` | 
+`public constexpr iterator `[`end`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac58a02f77ee8266e89c51336e2fba8cb)`() const noexcept` | 
+`public constexpr T * `[`operator->`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac26bda06da7a874ed672a92ca05510bb)`() const noexcept` | 
+`public constexpr T & `[`operator*`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4267408edeffc0286ac59b6f9e015e94)`() const noexcept` | 
+`public constexpr explicit `[`operator bool`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1af9aa3d4990088b02ed15f7ab7c3496b3)`() const noexcept` | 
+`public constexpr bool `[`has_value`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4b84b7e6ad97493ce06283f5282ad21b)`() const noexcept` | 
+`public constexpr T & `[`value`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac5f889fe6a018361ee51ccbd2f6872b0)`() const` | 
+`public template<>`  <br/>`constexpr std::remove_cv_t< T > `[`value_or`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ab60a9a544f635bd57d84f6403a016f68)`(U && u) const` | 
+`public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac4169c7e8a5acbc6409d17b38495b93d)`(F && f) const` | 
+`public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4919e2b1cc20178f46dcc29bfe4d3b92)`(F && f) const` | 
+`public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a9f7acb23bf8e0dcaa413e6e8473aa92d)`(F && f) const` | 
+`public constexpr void `[`reset`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a889876c05fc47924dd6904a6b0165651)`() noexcept` | 
+`public template<>`  <br/>`constexpr optional< T & > `[`or_else`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a13ba1eec1d30a8cf72bcef597fcce59f)`(F && f) const` | 
+`typedef `[`value_type`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a9b0db4eaba704e7243205b17c8b24887) | 
+`typedef `[`iterator`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aaa889a5dc4d4f7058a866157a6d6e7d3) | 
+
+## Members
+
+#### `public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a67edf5eae97d550713ca89108109dcf5)`() noexcept` 
+
+#### `public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa351491b602c8f171a9a768c5d37d5bd)`(nullopt_t) noexcept` 
+
+#### `public constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1af5c228bdfe1d9c6f54ae2471fa8633e5)`(const optional & rhs) = default` 
+
+#### `public template<>`  <br/>`constexpr explicit `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3cd88c454279117bc6a89f9435ad2f76)`(in_place_t,Arg && arg)` 
+
+#### `public template<>`  <br/>`inline constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a8df0d598150e1459945e2f5179adcb0a)`(!std::is_convertible_v< U, T & >)` 
+
+#### `public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a48a0f73cc425873a5de550d6acf30ec4)`(U && u) = delete` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aaf34b7f62a3e5eba402287b31c624216)`(!std::is_convertible_v< U &, T & >)` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a96cfb7f79dc229527069fc1ec293f27e)`(!std::is_convertible_v< const U &, T & >) const` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a1b5ec942c7917f67ac7c0666daca9da0)`(!std::is_convertible_v< U, T & >)` 
+
+#### `public template<>`  <br/>`constexpr `[`explicit`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a7ee64d17301131d0902cef70de06c304)`(!std::is_convertible_v< const U, T & >) const` 
+
+#### `public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aee389853b9a8df41254d1b7cffa36270)`(optional< U > & rhs) = delete` 
+
+#### `public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa10141f55a1a937944a1df4b96e2b711)`(const optional< U > & rhs) = delete` 
+
+#### `public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3fa3cc088683bc7df87bc5c6f25d5409)`(optional< U > && rhs) = delete` 
+
+#### `public template<>`  <br/>`constexpr `[`optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aa01ee211f6d6354a00a87b4a0a1b5cdb)`(const optional< U > && rhs) = delete` 
+
+#### `public constexpr `[`~optional`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4d14bdbc1e90bdb1cf2ee0683e1ea2d3)`() = default` 
+
+#### `public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a3b35d69f0dbf5cc26d6483477523db82)`(nullopt_t) noexcept` 
+
+#### `public constexpr optional & `[`operator=`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aad2a0e569774be08a4ee79a151cdd02e)`(const optional & rhs) = default` 
+
+#### `public template<>`  <br/>`constexpr T & `[`emplace`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a686f364426b25ae014e985bbb9b6f1c9)`(U && u)` 
+
+#### `public constexpr void `[`swap`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a1377d48c623415fccd805d77bd10a104)`(optional & rhs) noexcept` 
+
+#### `public constexpr iterator `[`begin`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a51a2ee589805c7501265949b5bc028d5)`() const noexcept` 
+
+#### `public constexpr iterator `[`end`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac58a02f77ee8266e89c51336e2fba8cb)`() const noexcept` 
+
+#### `public constexpr T * `[`operator->`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac26bda06da7a874ed672a92ca05510bb)`() const noexcept` 
+
+#### `public constexpr T & `[`operator*`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4267408edeffc0286ac59b6f9e015e94)`() const noexcept` 
+
+#### `public constexpr explicit `[`operator bool`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1af9aa3d4990088b02ed15f7ab7c3496b3)`() const noexcept` 
+
+#### `public constexpr bool `[`has_value`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4b84b7e6ad97493ce06283f5282ad21b)`() const noexcept` 
+
+#### `public constexpr T & `[`value`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac5f889fe6a018361ee51ccbd2f6872b0)`() const` 
+
+#### `public template<>`  <br/>`constexpr std::remove_cv_t< T > `[`value_or`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ab60a9a544f635bd57d84f6403a016f68)`(U && u) const` 
+
+#### `public template<>`  <br/>`constexpr auto `[`and_then`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1ac4169c7e8a5acbc6409d17b38495b93d)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr auto `[`transform`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a4919e2b1cc20178f46dcc29bfe4d3b92)`(F && f) const` 
+
+#### `public template<>`  <br/>`constexpr optional `[`or_else`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a9f7acb23bf8e0dcaa413e6e8473aa92d)`(F && f) const` 
+
+#### `public constexpr void `[`reset`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a889876c05fc47924dd6904a6b0165651)`() noexcept` 
+
+#### `public template<>`  <br/>`constexpr optional< T & > `[`or_else`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a13ba1eec1d30a8cf72bcef597fcce59f)`(F && f) const` 
+
+#### `typedef `[`value_type`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1a9b0db4eaba704e7243205b17c8b24887) 
+
+#### `typedef `[`iterator`](#classbeman_1_1optional_1_1optional_3_01T_01_6_01_4_1aaa889a5dc4d4f7058a866157a6d6e7d3) 
+
