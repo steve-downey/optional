@@ -34,6 +34,12 @@ set(CMAKE_CXX_FLAGS_ASAN
     "C++ ASAN Flags"
     FORCE
 )
+set(CMAKE_CXX_FLAGS_MSAN
+  "-O3 -g -DNDEBUG -fsanitize=memory"
+  CACHE STRING
+  "C++ MSAN Flags"
+  FORCE
+)
 
 set(CMAKE_CXX_FLAGS_GCOV
     "-O0 -fno-inline -g --coverage -fprofile-abs-path"
