@@ -7,7 +7,7 @@ BUILD_DIR?=.build
 DEST?=$(INSTALL_PREFIX)
 CMAKE_FLAGS?=
 
-TARGETS := test clean all ctest
+.DEFAULT_GOAL?=default
 
 export
 
@@ -43,6 +43,8 @@ define run_cmake =
 	-DCMAKE_INSTALL_PREFIX=$(abspath $(INSTALL_PREFIX)) \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
 	-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES="./cmake/use-fetch-content.cmake" \
+	--profiling-output=cmake-profile.json \
+    --profiling-format=google-trace \
 	$(_cmake_args) \
 	$(CURDIR)
 endef
@@ -57,7 +59,6 @@ $(_build_path)/CMakeCache.txt: | $(_build_path) .gitmodules
 	-rm compile_commands.json
 	ln -s $(_build_path)/compile_commands.json
 
-TARGET:=all
 compile: $(_build_path)/CMakeCache.txt ## Compile the project
 	cmake --build $(_build_path)  --config $(CONFIG) --target all -- -k 0
 
@@ -80,6 +81,19 @@ cmake: |  $(_build_path)
 
 clean: $(_build_path)/CMakeCache.txt ## Clean the build artifacts
 	cmake --build $(_build_path)  --config $(CONFIG) --target clean
+
+.PHONY: fresh
+fresh: _cmake_args+=--fresh
+fresh: cmake ## Fresh reconfigure
+
+.PHONY: graph
+graph: _cmake_args+=--graphviz=dependencies.dot
+graph: cmake ## Build the target dependency graph
+	cd $(_build_path) && dot -Tpng -o dependencies.png dependencies.dot
+
+.PHONY: view-graph
+view-graph: graph ## View the dep graph
+	sensible-browser $(_build_path)/dependencies.png
 
 realclean: ## Delete the build directory
 	rm -rf $(_build_path)
