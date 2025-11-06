@@ -3,9 +3,6 @@
 \settocdepth{chapter}
 \usepackage{minted}
 \usepackage{fontspec}
-\setromanfont{Source Serif Pro}
-\setsansfont{Source Sans Pro}
-% \setmonofont{Source Code Pro}
 
 \begin{document}
 \title{Optimize for std::optional in range adaptors}
@@ -18,10 +15,10 @@
 
 \begin{flushright}
   \begin{tabular}{ll}
-    Document \#: & P3913R0 \\
+    Document \#: & D3913R1 \\
     Date: & \today \\
     Project: & Programming Language C++ \\
-    Audience: & LEWG,LWG
+    Audience: & LWG
   \end{tabular}
 \end{flushright}
 
@@ -41,11 +38,16 @@ Proposed change:
 
 Add a special case to recognize optional for adaptors:
 
+\begin{itemize}
+\item
 views::as_const: should return optional or optional<const U\&> (if T is U\&)
+\item
 views::take(opt, n): empty optional if n is equal to zero, opt otherwise
+\item
 views::drop(opt, n): empty optional if n greater than zero, opt otherwise
+\item
 views::reverse: input unchanged
-
+\end{itemize}
 
 \chapter{Design}
 
@@ -104,7 +106,7 @@ except that the evaluations of \tcode{E} and \tcode{F}
 are indeterminately sequenced.
 \begin{addedblock}
 \item
-Otherwise, If \tcode{T} is specialization of \tcode{optional}, then \tcode{(F == D(0) ?  ((void)E, T()) : \placeholdernc{decay-copy}(E))}
+Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \tcode{(static_cast<D>(F) == D() ?  ((void)E, T()) : \placeholdernc{decay-copy}(E))}.
 \end{addedblock}
 \item
 Otherwise, if \tcode{T} models
@@ -187,7 +189,7 @@ except that the evaluations of \tcode{E} and \tcode{F}
 are indeterminately sequenced.
 \begin{addedblock}
 \item
-Otherwise, If \tcode{T} is specialization of \tcode{optional}, then \tcode{(F == D(0) ? \placeholdernc{decay-copy}(E) : ((void)E, T()))}
+Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \tcode{(static_cast<D>(F) == D() ? \placeholdernc{decay-copy}(E) : ((void)E, T()))}.
 \end{addedblock}
 \item
 Otherwise, if \tcode{T} models
@@ -261,9 +263,9 @@ if \tcode{U} denotes \tcode{empty_view<X>}
 for some type \tcode{X}, then \tcode{auto(views::empty<const X>)}.
 \begin{addedblock}
 \item
-Otherwise, if \tcode{U} denotes \tcode{optional<X\&>} for some type \tcode{X} , then \tcode{optional<const X\&>(E)}
+Otherwise, if \tcode{U} denotes \tcode{optional<X\&>} for some type \tcode{X} , then \tcode{optional<const X\&>(E)}.
 \item
-Otherwise, if \tcode{U} denotes \tcode{optional<X>} for some type \tcode{X} , then \tcode{optional<const X>(E)}
+Otherwise, if \tcode{U} denotes \tcode{optional<X>} for some type \tcode{X} , then \tcode{optional<const X>(E)}.
 \end{addedblock}
 \item
 Otherwise,
@@ -306,7 +308,7 @@ Given a subexpression \tcode{E}, the expression
   then \tcode{E.base()}.
 \begin{addedblock}
 \item
-  Otherwise, If \tcode{T} is specialization of \tcode{optional}, then \placeholdernc{decay-copy}(E).
+  Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \placeholdernc{decay-copy}(E).
 \end{addedblock}
 \item
   Otherwise, if the type of \tcode{E} is \cv{} \tcode{subrange<reverse_iterator<I>, reverse_iterator<I>, K>}
