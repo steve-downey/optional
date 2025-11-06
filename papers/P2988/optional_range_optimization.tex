@@ -54,19 +54,20 @@ views::reverse: input unchanged
 
 \section{views::as_const}
 
-return optional or optional<const U\&> (if T is U\&)
+Return \tcode{optional}.
 
+In contrast to \tcode{optional<const T\&>}, \tcode{optional<const T>} is not a view, because it is not assignable. In consequence it should not be returned from \tcode{views::as_const} for \tcode{optional<T>}.
 \section{views::take(opt, n)}
 
-empty optional if n is equal to zero, opt otherwise
+Empty \tcode{optional} if \tcode{n} is equal to zero, \tcode{optional} otherwise.
 
 \section{views::drop(opt, n)}
 
-empty optional if n greater than zero, opt otherwise
+Empty \tcode{optional} if \tcode{n} greater than zero, \tcode{optional} otherwise.
 
 \section{views::reverse}
 
-input unchanged
+Input is returned unchanged.
 
 \chapter{Wording}
 The proposed changes are relative to the current working draft \cite{N5014}.
@@ -106,7 +107,7 @@ except that the evaluations of \tcode{E} and \tcode{F}
 are indeterminately sequenced.
 \begin{addedblock}
 \item
-Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \tcode{(static_cast<D>(F) == D() ?  ((void)E, T()) : \placeholdernc{decay-copy}(E))}.
+Otherwise, if \tcode{T} is a specialization of \tcode{optional} and \tcode{T} models \tcode{view}, then \tcode{(static_cast<D>(F) == D() ?  ((void)E, T()) : \placeholdernc{decay-copy}(E))}.
 \end{addedblock}
 \item
 Otherwise, if \tcode{T} models
@@ -189,7 +190,7 @@ except that the evaluations of \tcode{E} and \tcode{F}
 are indeterminately sequenced.
 \begin{addedblock}
 \item
-Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \tcode{(static_cast<D>(F) == D() ? \placeholdernc{decay-copy}(E) : ((void)E, T()))}.
+Otherwise, if \tcode{T} is a specialization of \tcode{optional} and \tcode{T} models \tcode{view}, then \tcode{(static_cast<D>(F) == D() ? \placeholdernc{decay-copy}(E) : ((void)E, T()))}.
 \end{addedblock}
 \item
 Otherwise, if \tcode{T} models
@@ -263,9 +264,7 @@ if \tcode{U} denotes \tcode{empty_view<X>}
 for some type \tcode{X}, then \tcode{auto(views::empty<const X>)}.
 \begin{addedblock}
 \item
-Otherwise, if \tcode{U} denotes \tcode{optional<X\&>} for some type \tcode{X} , then \tcode{optional<const X\&>(E)}.
-\item
-Otherwise, if \tcode{U} denotes \tcode{optional<X>} for some type \tcode{X} , then \tcode{optional<const X>(E)}.
+Otherwise, if \tcode{U} denotes \tcode{optional<X\&>} for some type \tcode{X}, then \tcode{optional<const X\&>(E)}.
 \end{addedblock}
 \item
 Otherwise,
@@ -308,7 +307,7 @@ Given a subexpression \tcode{E}, the expression
   then \tcode{E.base()}.
 \begin{addedblock}
 \item
-  Otherwise, if \tcode{T} is specialization of \tcode{optional}, then \placeholdernc{decay-copy}(E).
+  Otherwise, if \tcode{E} is specialization of \tcode{optional} and \tcode{E} models \tcode{view}, then \placeholdernc{decay-copy}(E).
 \end{addedblock}
 \item
   Otherwise, if the type of \tcode{E} is \cv{} \tcode{subrange<reverse_iterator<I>, reverse_iterator<I>, K>}
