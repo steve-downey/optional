@@ -39,19 +39,17 @@
 \newenvironment{addedblock}{\color{addclr}}{\color{black}}
 \newenvironment{removedblock}{\color{remclr}}{\color{black}}
 
-%% %%--------------------------------------------------
-%% %% Grammar extraction.
-%% %%--------------------------------------------------
-%% \def\gramSec[#1]#2{}
+%%-------------------------------------------------------------
+%% Grammar extraction.
+%% Assumes that the output file \gramout is managed externally.
+%%-------------------------------------------------------------
+\makeatletter
+\newcommand{\gramWrite}[1]{\protected@write\gramout{}{#1}}
+\newcommand{\meaningbody}[1]{\expandafter\strip@prefix\meaning#1}
+\makeatother
 
-%% \makeatletter
-%% \newcommand{\FlushAndPrintGrammar}{%
-%% \immediate\closeout\XTR@out%
-%% \immediate\openout\XTR@out=std-gram-dummy.tmp%
-%% \def\gramSec[##1]##2{\rSec1[##1]{##2}}%
-%% \input{std-gram.ext}%
-%% }
-%% \makeatother
+\newcommand{\gramSec}[2][]{\gramWrite{%
+\string\rSec1\string[\string#1\string]\string{\string#2\string}}}
 
 %%--------------------------------------------------
 % Escaping for index entries. Replaces ! with "! throughout its argument.
@@ -237,6 +235,11 @@
 %%--------------------------------------------------
 \newcommand{\CodeStyle}{\ttfamily}
 \newcommand{\CodeStylex}[1]{\texttt{\protect\frenchspacing #1}}
+\makeatletter
+% Append `\@` to restore proper sentence spacing in text mode. This insertion
+% happens only during normal typesetting; it is suppressed for .idx generation.
+\newcommand{\CodeStylexGuarded}[1]{\CodeStylex{#1\ifmmode\else\ifx\protect\@typeset@protect\@\fi\fi}}
+\makeatother
 
 \definecolor{grammar-gray}{gray}{0.2}
 
@@ -244,7 +247,7 @@
 \newcommand{\GrammarStylex}[1]{\textcolor{grammar-gray}{\textsf{\textit{#1}}}}
 
 % Code and definitions embedded in text.
-\newcommand{\tcode}[1]{\CodeStylex{#1}}
+\newcommand{\tcode}[1]{\CodeStylexGuarded{#1}}
 \newcommand{\term}[1]{\textit{#1}}
 \newcommand{\gterm}[1]{\GrammarStylex{#1}}
 \newcommand{\fakegrammarterm}[1]{\gterm{#1}}
@@ -294,7 +297,7 @@
 \newcommand{\CppXXIII}{\Cpp{} 2023}
 \newcommand{\CppXXVI}{\Cpp{} 2026}
 \newcommand{\IsoCUndated}{ISO/IEC 9899}
-\newcommand{\IsoC}{\IsoCUndated{}:2018}
+\newcommand{\IsoC}{\IsoCUndated{}:2024}
 \newcommand{\IsoFloatUndated}{ISO/IEC 60559}
 \newcommand{\IsoPosixUndated}{ISO/IEC/IEEE 9945}
 \newcommand{\IsoPosix}{\IsoPosixUndated{}:2009}
@@ -365,6 +368,7 @@
 \newcommand{\required}{\Fundesc{Required behavior}}
 \newcommand{\constraints}{\Fundesc{Constraints}}
 \newcommand{\mandates}{\Fundesc{Mandates}}
+\newcommand{\constantwhen}{\Fundesc{Constant When}}
 \newcommand{\expects}{\Fundesc{Preconditions}}
 \newcommand{\hardexpects}{\Fundesc{Hardened preconditions}}
 \newcommand{\effects}{\Fundesc{Effects}}
@@ -464,8 +468,14 @@
 \newcommand{\unspecbool}{\UNSP{unspecified-bool-type}}
 \newcommand{\seebelow}{\UNSP{see below}}      % macro length: 0
 \newcommand{\seebelownc}{\UNSPnc{see below}}  % macro length: 2
+\newcommand{\seeabove}{\UNSP{see above}}      % macro length: 0
+\newcommand{\seeabovenc}{\UNSPnc{see above}}  % macro length: 2
 \newcommand{\unspecuniqtype}{\UNSP{unspecified unique type}}
 \newcommand{\unspecalloctype}{\UNSP{unspecified allocator type}}
+
+%% Convenience macro for double carets in expressions,
+%% particularly within \tcode.
+\newcommand{\reflexpr}[1]{\caret\caret#1}
 
 %% Manual insertion of italic corrections, for aligning in the presence
 %% of the above annotations.
@@ -587,7 +597,7 @@
 \lstset{escapechar=@, aboveskip=\parskip, belowskip=0pt,
         midpenalty=500, endpenalty=-50,
         emptylinepenalty=-250, semicolonpenalty=0,upquote=true}%
-\renewcommand{\tcode}[1]{\textup{\CodeStylex{##1}}}
+\renewcommand{\tcode}[1]{\textup{\CodeStylexGuarded{##1}}}
 \renewcommand{\term}[1]{\textit{##1}}%
 \renewcommand{\grammarterm}[1]{\gterm{##1}}%
 }
@@ -645,7 +655,7 @@
  belowskip=0ex	% leave this alone: it keeps these things out of the
 				% footnote area
  }%
- \renewcommand{\tcode}[1]{\textup{\CodeStylex{##1}}}
+ \renewcommand{\tcode}[1]{\textup{\CodeStylexGuarded{##1}}}
 }
 {
 }
@@ -701,7 +711,12 @@
  \nonfrenchspacing
  }
 
-\newenvironment{simplebnf}
+% "ncbnf" is the non-copied "base" versions of the bnf environment;
+% instances of the full "bnf" environment is copied to the grammar
+% extraction file.
+% (Similarly for "ncsimplebnf", though in fact we never extract any
+% hypothetical "simplebnf" environments.)
+\newenvironment{ncsimplebnf}
 {
  \begin{bnfbase}
  \BnfNontermshape
@@ -712,7 +727,7 @@
  \end{bnfbase}
 }
 
-\newenvironment{bnf}
+\newenvironment{ncbnf}
 {
  \begin{bnfbase}
  \begin{bnflist}
@@ -724,6 +739,7 @@
  \end{bnfbase}
 }
 
+% The regex grammar is never copied.
 \newenvironment{ncrebnf}
 {
  \begin{bnfbase}
@@ -737,11 +753,10 @@
  \end{bnfbase}
 }
 
-% non-copied versions of bnf environments
-\let\ncsimplebnf\simplebnf
-\let\endncsimplebnf\endsimplebnf
-\let\ncbnf\bnf
-\let\endncbnf\endbnf
+\NewEnviron{bnf}{\begin{ncbnf}%
+\BODY%
+\gramWrite{\string\begin{ncbnf}\meaningbody\BODY\string\end{ncbnf}}%
+\end{ncbnf}}{}
 
 %%--------------------------------------------------
 %% Environment for imported graphics
