@@ -1,4 +1,4 @@
-PYEXECPATH ?= $(shell which python3.12 || which python3.11 || which python3.10)
+PYEXECPATH ?= $(shell which python3.13 || which python3.12 || which python3.11 || which python3.10)
 PYTHON ?= $(shell basename $(PYEXECPATH))
 VENV := .venv/
 SOURCE_VENV := . $(VENV)/bin/activate;
