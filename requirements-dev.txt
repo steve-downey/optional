@@ -8,7 +8,7 @@ distlib==0.4.0
     # via virtualenv
 filelock==3.20.1
     # via virtualenv
-gcovr==8.4
+gcovr==8.5
     # via -r requirements-dev.in
 identify==2.6.15
     # via pre-commit
