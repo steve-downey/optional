@@ -28,5 +28,5 @@ pygments==2.19.2
     # via gcovr
 pyyaml==6.0.3
     # via pre-commit
-virtualenv==20.35.4
+virtualenv==20.36.1
     # via pre-commit
