@@ -46,11 +46,11 @@ def parse_beman_submodule_file(path):
         raise Exception(f'Failed to parse {path} as a .beman_submodule file')
     if not read_result:
         fail()
-    if not 'beman_submodule' in config:
+    if 'beman_submodule' not in config:
         fail()
-    if not 'remote' in config['beman_submodule']:
+    if 'remote' not in config['beman_submodule']:
         fail()
-    if not 'commit_hash' in config['beman_submodule']:
+    if 'commit_hash' not in config['beman_submodule']:
         fail()
     allow_untracked_files = config.getboolean(
         'beman_submodule', 'allow_untracked_files', fallback=False)
@@ -143,7 +143,7 @@ def beman_submodule_update(beman_submodule, remote):
         f.write(f'remote={beman_submodule.remote}\n')
         f.write(f'commit_hash={sha_process.stdout.strip()}\n')
         if beman_submodule.allow_untracked_files:
-            f.write(f'allow_untracked_files=True\n')
+            f.write('allow_untracked_files=True\n')
     shutil.rmtree(tmp_path / '.git')
     shutil.copytree(tmp_path, beman_submodule.dirpath, dirs_exist_ok=True)
 
@@ -182,7 +182,7 @@ def add_command(repository, path, allow_untracked_files):
         f.write(f'remote={repository}\n')
         f.write(f'commit_hash={sha_process.stdout.strip()}\n')
         if allow_untracked_files:
-            f.write(f'allow_untracked_files=True\n')
+            f.write('allow_untracked_files=True\n')
     shutil.rmtree(tmpdir_repo /'.git')
     shutil.copytree(tmpdir_repo, path, dirs_exist_ok=True)
 
@@ -225,7 +225,7 @@ def get_parser():
     return parser
 
 def parse_args(args):
-    return get_parser().parse_args(args);
+    return get_parser().parse_args(args)
 
 def usage():
     return get_parser().format_help()
