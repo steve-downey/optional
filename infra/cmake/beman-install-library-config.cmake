@@ -38,7 +38,8 @@ function(beman_install_library name)
     #
     set(options "")
     set(multiValueArgs "")
-    set(multiValueArgs "FILE_SET")
+    set(multiValueArgs TARGETS)
+
     cmake_parse_arguments(
         BEMAN_INSTALL_LIBRARY
         "${options}"
@@ -51,8 +52,11 @@ function(beman_install_library name)
         message(FATAL_ERROR "Target '${name}' does not exist.")
     endif()
 
-    if(NOT BEMAN_INSTALL_LIBRARY_FILE_SET)
-        set(BEMAN_INSTALL_LIBRARY_FILE_SET "HEADERS")
+    if(NOT BEMAN_INSTALL_LIBRARY_TARGETS)
+      if(NOT TARGET "${name}")
+        message(FATAL_ERROR "Target '${name}' does not exist and TARGETS not specified.")
+      endif()
+      set(BEMAN_INSTALL_LIBRARY_TARGETS ${name})
     endif()
 
     # Given foo.bar, the component name is bar
@@ -66,23 +70,56 @@ function(beman_install_library name)
         )
     endif()
 
-    set(target_name "${name}")
-    set(install_component_name "${name}")
-    set(export_name "${name}")
-    set(package_name "${name}")
-    list(GET name_parts -1 component_name)
+    foreach(_tgt IN LISTS BEMAN_INSTALL_LIBRARY_TARGETS)
+      if(NOT TARGET "${_tgt}")
+        message(
+          WARNING
+          "beman_install_library(${name}): '${_tgt}' is not a target"
+        )
+        continue()
+      endif()
 
-    install(
+      set(target_name "${_tgt}")
+      set(install_component_name "${_tgt}")
+      set(export_name "${name}")
+      set(package_name "${name}")
+      list(GET name_parts -1 component_name)
+
+      set(_install_header_set_args)
+      get_target_property(
+        _available_header_sets
+        ${_tgt}
+        INTERFACE_HEADER_SETS
+      )
+      if(_available_header_sets)
+        message(
+          VERBOSE
+          "beman-install-library(${name}): '${_tgt}' has INTERFACE_HEADER_SETS=${_available_header_sets}"
+        )
+        foreach(_install_header_set IN LISTS _available_header_sets)
+          list(
+            APPEND _install_header_set_args
+            FILE_SET
+            "${_install_header_set}"
+            COMPONENT
+            "${install_component_name}"
+          )
+        endforeach()
+      else()
+        set(_install_header_set_args FILE_SET HEADERS)
+      endif()
+
+      install(
         TARGETS "${target_name}"
-        COMPONENT "${install_component_name}"
         EXPORT "${export_name}"
-        FILE_SET "${BEMAN_INSTALL_LIBRARY_FILE_SET}"
-    )
+        ${_install_header_set_args}
+      )
 
-    set_target_properties(
+      set_target_properties(
         "${target_name}"
         PROPERTIES EXPORT_NAME "${component_name}"
-    )
+      )
+    endforeach()
 
     include(GNUInstallDirs)
 
@@ -129,10 +166,7 @@ function(beman_install_library name)
         find_file(
             config_file_template
             NAMES "${package_name}-config.cmake.in"
-            PATHS
-                "${CMAKE_CURRENT_SOURCE_DIR}"
-                "${PROJECT_SOURCE_DIR}/cmake"
-                "${CMAKE_SOURCE_DIR}/cmake"
+            PATHS "${PROJECT_SOURCE_DIR}/cmake"
             NO_DEFAULT_PATH
             NO_CACHE
             REQUIRED
