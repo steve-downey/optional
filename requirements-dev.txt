@@ -24,7 +24,7 @@ platformdirs==4.5.1
     # via virtualenv
 pre-commit==4.6.2
     # via -r requirements-dev.in
-pygments==2.19.2
+pygments==2.20.0
     # via gcovr
 pyyaml==6.0.3
     # via pre-commit
