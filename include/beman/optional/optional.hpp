@@ -1850,7 +1850,7 @@ class optional<T&> {
         requires (std::is_object_v<T> && !std::is_array_v<T>)
     constexpr std::decay_t<T> value_or(U&& u) const;
 
-    // \ref{optionalref.monadic}, monadic operations
+    // \ref{optional.ref.monadic}, monadic operations
     /**
      * @brief Applies a function to the contained value if there is one.
      *
@@ -1901,6 +1901,7 @@ class optional<T&> {
     constexpr void reset() noexcept;
 
   private:
+    //! \expos(val)
     T* value_ = nullptr; // exposition only
 
     // \ref{optionalref.expos}, exposition only helper functions
@@ -2055,7 +2056,12 @@ constexpr std::decay_t<T> optional<T&>::value_or(U&& u) const {
     return std::forward<U>(u);
 }
 
-//   \rSec3[optionalref.monadic]{Monadic operations}
+//   \rSec3[optional.ref.monadic]{Monadic operations}
+
+//! Let `U` be `invoke_result_t<F, T&>`.
+//! \mandates `U` is a specialization of `optional`.
+//! \covers detail::is_optional<U>
+//! \effects-equiv
 template <class T>
 template <class F>
 constexpr auto optional<T&>::and_then(F&& f) const {
@@ -2073,6 +2079,23 @@ constexpr auto optional<T&>::and_then(F&& f) const {
  *
  * @return optional<std::invoke_result_t<F, T&>>
  */
+
+//! Let `U` be `invoke_result_t<F, T&>`.
+//! \mandates `U` is a valid contained type for `optional`.
+//! \covers !is_same_v<remove_cvref_t<U>, in_place_t>
+//! \covers !is_same_v<remove_cvref_t<U>, nullopt_t>
+//! \covers (is_object_v<U> && !is_array_v<U>) || is_lvalue_reference_v<U>
+//! The declaration
+//! \codeblock
+//! U u(invoke(std::forward<F>(f), *@\exposid{val}@));
+//! \endcodeblock
+//! is well-formed for some invented variable `u`.
+//! \note There is no requirement that `U` is movable\iref{dcl.init.general}.
+//! \endnote
+//! \returns If `*this` contains a value, an `optional<U>` object
+//! whose contained value is direct-non-list-initialized with
+//! `invoke(std::forward<F>(f), *val)`;
+//! otherwise, `optional<U>()`.
 template <class T>
 template <class F>
 constexpr optional<std::invoke_result_t<F, T&>> optional<T&>::transform(F&& f) const {
@@ -2097,14 +2120,16 @@ constexpr optional<std::invoke_result_t<F, T&>> optional<T&>::transform(F&& f) c
  * @param f
  * @return optional<T&>
  */
+
+//! \effects-equiv
 template <class T>
 template <class F>
 constexpr optional<T&> optional<T&>::or_else(F&& f) const
 
     requires (std::invocable<F>)
 {
-    using U = std::invoke_result_t<F>;
-    static_assert(std::is_same_v<std::remove_cvref_t<U>, optional>, "Result must be an optional");
+    static_assert(std::is_same_v<std::remove_cvref_t<std::invoke_result_t<F>>, optional>,
+                  "Result must be an optional");
     if (has_value()) {
         return *this;
     } else {
